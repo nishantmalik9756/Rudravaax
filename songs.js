@@ -18,6 +18,18 @@ const musicLibrary = [
         releaseDate: "Today at 1 PM"
     },
 
+    {
+        id: 1,
+        title: "You Know My Love",
+        artist: "Archak, Rudravaax",
+
+        type: "Single",
+
+        cover: "images/ykml.jpeg",
+        audio: "music/ykml.mp3",
+
+        releaseDate: "Today at 1 PM"
+ },
 
     // ==================================
     // EPs
