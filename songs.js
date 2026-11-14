@@ -13,7 +13,7 @@ const musicLibrary = [
         type: "Single",
 
         cover: "images/minorcheers.jpeg",
-        audio: "music/Minor-Cheers.wav",
+        audio: "music/Minor-Cheers.mp3",
 
         releaseDate: "Today at 1 PM"
     },
