@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>RudraVX Player</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="play.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="player-header">
+
+        <a href="index.html" class="logo">
+            <img src="images/logo.jpeg" alt="RudraVX">
+        </a>
+
+        <h1>RudraVX Play</h1>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="music-container">
+
+        <!-- SEARCH -->
+        <section class="search-section">
+
+            <input
+                type="search"
+                id="songSearch"
+                placeholder="Search songs, albums or artists..."
+            >
+
+        </section>
+
+
+        <!-- SINGLES -->
+        <section class="music-section" id="singlesSection">
+
+            <h2>Singles</h2>
+
+            <div class="music-grid" id="singlesContainer"></div>
+
+        </section>
+
+
+        <!-- EPS -->
+        <section class="music-section" id="epsSection">
+
+            <h2>EPs</h2>
+
+            <div class="music-grid" id="epsContainer"></div>
+
+        </section>
+
+
+        <!-- ALBUMS -->
+        <section class="music-section" id="albumsSection">
+
+            <h2>Albums</h2>
+
+            <div class="music-grid" id="albumsContainer"></div>
+
+        </section>
+
+
+        <!-- SEARCH RESULTS -->
+        <section class="music-section" id="searchResultsSection" hidden>
+
+            <h2>Search Results</h2>
+
+            <div class="music-grid" id="searchResults"></div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ALBUM DETAILS -->
+    <section class="album-section" id="albumSection" hidden>
+
+        <button id="closeAlbum">Back</button>
+
+        <div id="albumDetails"></div>
+
+        <div id="albumTracks"></div>
+
+    </section>
+
+
+    <!-- BOTTOM PLAYER -->
+    <footer class="bottom-player" id="bottomPlayer">
+
+        <!-- CURRENT SONG -->
+        <div class="current-song">
+
+            <img
+                id="currentCover"
+                src="images/logo.jpeg"
+                alt="Song Cover"
+            >
+
+            <div>
+
+                <h3 id="currentTitle">Select a Song</h3>
+
+                <p id="currentArtist">Rudravaax</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+        <div class="player-controls">
+
+            <div class="control-buttons">
+
+                <button id="shuffleBtn">🔀</button>
+
+                <button id="previousBtn">⏮</button>
+
+                <button id="playPauseBtn">▶</button>
+
+                <button id="nextBtn">⏭</button>
+
+                <button id="repeatBtn">🔁</button>
+
+            </div>
+
+
+            <!-- PROGRESS -->
+            <div class="progress-container">
+
+                <span id="currentTime">0:00</span>
+
+                <input
+                    type="range"
+                    id="progressBar"
+                    min="0"
+                    max="100"
+                    value="0"
+                >
+
+                <span id="duration">0:00</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- VOLUME -->
+        <div class="volume-control">
+
+            <span>🔊</span>
+
+            <input
+                type="range"
+                id="volumeBar"
+                min="0"
+                max="1"
+                step="0.01"
+                value="1"
+            >
+
+        </div>
+
+    </footer>
+
+
+    <!-- AUDIO -->
+    <audio id="audioPlayer" preload="metadata"></audio>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="songs.js"></script>
+    <script src="player.js"></script>
+
+</body>
+</html>
