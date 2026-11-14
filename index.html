@@ -27,6 +27,27 @@
 
 <body>
 
+    <!-- RUDRAVX INTRO ANIMATION -->
+<div class="intro-screen" id="intro-screen">
+
+    <div class="intro-lockup">
+
+        
+<div class="intro-logo-wrap">
+            <img src="images/logo.jpeg"
+                 alt="RudraVX"
+                 class="intro-logo intro-logo-two">
+        </div>
+
+        <div class="intro-text">
+            <h1>India's 1st</h1>
+            <p>Artist-First All In-One Ecosystem</p>
+        </div>
+
+    </div>
+
+</div>
+
     <!-- HEADER -->
     <header class="site-header">
         <div class="container navbar">
@@ -462,6 +483,26 @@
         });
     });
   }
+</script>
+
+<script>
+    // RudraVX 6-second intro animation
+    window.addEventListener("load", function () {
+
+        const intro = document.getElementById("intro-screen");
+
+        if (!intro) return;
+
+        setTimeout(function () {
+            intro.classList.add("intro-finish");
+
+            setTimeout(function () {
+                intro.remove();
+            }, 600);
+
+        }, 6000);
+
+    });
 </script>
 
 </body>
