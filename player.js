@@ -516,3 +516,32 @@ document.addEventListener("DOMContentLoaded", () => {
     displayLibrary();
 
 });
+/* ==============================
+   ECOSYSTEM POPUP
+============================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const popup = document.getElementById("ecosystemPopup");
+    const closeBtn = document.getElementById("closePopup");
+    const gotItBtn = document.getElementById("gotItBtn");
+
+    if (!popup) return;
+
+    // Show popup whenever play.html opens
+    setTimeout(() => {
+        popup.classList.add("show");
+    }, 500);
+
+    function closeEcosystemPopup() {
+        popup.classList.remove("show");
+    }
+
+    closeBtn?.addEventListener("click", closeEcosystemPopup);
+    gotItBtn?.addEventListener("click", closeEcosystemPopup);
+
+    popup.addEventListener("click", (event) => {
+        if (event.target === popup) {
+            closeEcosystemPopup();
+        }
+    });
+});

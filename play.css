@@ -892,3 +892,125 @@ button {
     }
 
 }
+/* ==============================
+   RUDRAVX ECOSYSTEM POPUP
+============================== */
+
+.ecosystem-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(15, 25, 40, 0.45);
+    backdrop-filter: blur(5px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.ecosystem-popup-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.ecosystem-popup {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 32px 25px 25px;
+
+    text-align: center;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.16);
+
+    transform: translateY(20px) scale(0.96);
+    transition: transform 0.3s ease;
+}
+
+.ecosystem-popup-overlay.show .ecosystem-popup {
+    transform: translateY(0) scale(1);
+}
+
+.popup-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+
+    border: none;
+    background: transparent;
+    color: #7b8492;
+
+    font-size: 27px;
+    cursor: pointer;
+}
+
+.popup-icon {
+    width: 55px;
+    height: 55px;
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 17px;
+    background: #edf4ff;
+    color: #1769ff;
+
+    font-size: 30px;
+}
+
+.ecosystem-popup h2 {
+    color: #17243a;
+    font-size: 22px;
+    margin: 0 0 12px;
+    font-weight: 750;
+}
+
+.ecosystem-popup p {
+    color: #68758a;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 23px;
+}
+
+.ecosystem-popup p strong {
+    color: #1769ff;
+}
+
+.popup-got-it {
+    width: 100%;
+    padding: 13px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #1769ff;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 650;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.popup-got-it:hover {
+    background: #0b43b5;
+}
+
+@media (max-width: 480px) {
+    .ecosystem-popup {
+        max-width: 330px;
+        padding: 30px 22px 22px;
+    }
+}
