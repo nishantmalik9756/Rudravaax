@@ -729,3 +729,104 @@ button {
         padding: 22px 15px;
     }
 }
+
+
+/* ==============================
+   RUDRAVX DISCOUNTED PRICING
+============================== */
+
+/* OLD PRICE */
+.price del,
+.wide-price del {
+    color: #a5afbd;
+    font-size: 17px;
+    font-weight: 500;
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+    margin-right: 7px;
+}
+
+/* NEW PRICE */
+.price {
+    color: #119b61;
+    font-size: 35px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.wide-price {
+    color: #119b61;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+/* DISCOUNT BADGE */
+.price span,
+.wide-price span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 5px 9px;
+    border-radius: 5px;
+    background: #e8f8ef;
+    color: #119b61;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+}
+
+/* WIDE CARD DISCOUNT TEXT */
+.wide-price span {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+/* PRICE HOVER EFFECT */
+.card:hover .price {
+    color: #087b4b;
+}
+
+.wide-card:hover .wide-price {
+    color: #087b4b;
+}
+
+/* OLD PRICE HOVER */
+.price del,
+.wide-price del {
+    transition: color 0.25s ease;
+}
+
+.card:hover .price del,
+.wide-card:hover .wide-price del {
+    color: #c0c8d2;
+}
+
+/* MOBILE PRICING */
+@media (max-width: 650px) {
+
+    .price {
+        font-size: 32px;
+        gap: 6px;
+    }
+
+    .price del,
+    .wide-price del {
+        font-size: 15px;
+    }
+
+    .price span,
+    .wide-price span {
+        font-size: 9px;
+        padding: 4px 7px;
+    }
+
+    .wide-price {
+        font-size: 25px;
+    }
+
+}

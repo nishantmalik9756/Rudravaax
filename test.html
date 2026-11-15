@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<title>RudraVX Foundation | Artist Assessment</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f5f7fb;color:#172033;min-height:100vh}
+header{background:#fff;border-bottom:1px solid #e8ebf1;padding:18px 7%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:21px;font-weight:800;letter-spacing:1px}
+.logo span{color:#2878e8}
+header small{color:#718096}
+.container{max-width:850px;margin:45px auto;padding:0 18px}
+.card{background:#fff;padding:30px;border:1px solid #e8ebf1;border-radius:16px;box-shadow:0 8px 30px #17203308}
+h1{font-size:29px;margin-bottom:12px}
+h2{font-size:22px;margin-bottom:12px}
+p{color:#667085;line-height:1.7}
+.muted{color:#8792a5;font-size:13px}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0}
+.info div{background:#f5f8fd;padding:17px;border-radius:10px}
+.info strong{display:block;font-size:21px;margin-bottom:5px}
+.info span{font-size:12px;color:#718096}
+button{border:0;border-radius:9px;padding:14px 22px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.primary{background:#2878e8;color:#fff}
+.primary:hover{background:#1764cd}
+.secondary{background:#edf2f8;color:#26364d}
+button:disabled{opacity:.5;cursor:not-allowed}
+.full{width:100%;margin-top:18px}
+.hidden{display:none!important}
+.idbox{background:#edf5ff;padding:17px;border-radius:10px;margin:18px 0}
+.idbox strong{font-size:19px;letter-spacing:1px;color:#1764cd}
+.testtop{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
+.timer{background:#fff1f0;color:#d33b35;padding:12px 17px;border-radius:9px;font-weight:800;font-size:18px}
+.progress{height:7px;background:#edf0f5;border-radius:20px;overflow:hidden;margin:15px 0 25px}
+.progress div{height:100%;width:0;background:#2878e8;transition:.2s}
+.question{font-size:20px;line-height:1.5;margin:15px 0 25px}
+.option{display:block;padding:16px;border:1px solid #e2e7ef;border-radius:10px;margin:12px 0;cursor:pointer;transition:.2s;color:#344054}
+.option:hover{border-color:#2878e8;background:#f7faff}
+.option.selected{border-color:#2878e8;background:#edf5ff;color:#1764cd}
+.option input{margin-right:10px}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:25px}
+.notice{background:#fff9e9;border:1px solid #f5e4b6;padding:15px;border-radius:10px;margin:18px 0;color:#775b16;font-size:13px;line-height:1.6}
+.status{padding:13px;background:#f3f7fc;border-radius:9px;margin:15px 0;font-size:14px}
+.result{font-size:48px;font-weight:800;color:#2878e8;margin:20px 0 5px}
+.testrow{display:flex;justify-content:space-between;align-items:center;border:1px solid #e8ebf1;padding:16px;border-radius:10px;margin:10px 0;gap:12px}
+.testrow small{display:block;color:#8792a5;margin-top:5px}
+footer{text-align:center;padding:30px;color:#9aa3b2;font-size:12px}
+@media(max-width:600px){
+header{padding:16px 5%}
+.container{margin:25px auto}
+.card{padding:21px}
+h1{font-size:24px}
+.info{grid-template-columns:1fr}
+.testtop{align-items:flex-start}
+.question{font-size:18px}
+.testrow{align-items:flex-start}
+}
+
+
+.loader-content{
+    text-align:center;
+    padding:35px 10px;
+}
+
+.loader-circle{
+    width:55px;
+    height:55px;
+    border:5px solid #e8eef8;
+    border-top-color:#2878e8;
+    border-radius:50%;
+    margin:0 auto 25px;
+    animation:loaderSpin .8s linear infinite;
+}
+
+.loader-content h2{
+    margin-bottom:10px;
+}
+
+.loader-content p{
+    margin-bottom:18px;
+}
+
+.loading-bar{
+    max-width:350px;
+    height:6px;
+    background:#edf0f5;
+    border-radius:20px;
+    margin:25px auto;
+    overflow:hidden;
+}
+
+.loading-bar-fill{
+    height:100%;
+    width:35%;
+    background:#2878e8;
+    border-radius:20px;
+    animation:loadingMove 1.5s ease-in-out infinite;
+}
+
+@keyframes loaderSpin{
+    to{transform:rotate(360deg)}
+}
+
+@keyframes loadingMove{
+    0%{transform:translateX(-120%)}
+    100%{transform:translateX(350%)}
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Rudra<span>VX</span> Foundation</div>
+    <small>Artist Assessment</small>
+</header>
+
+<main class="container">
+
+<section class="card" id="dashboard">
+    <h1>Artist Assessment</h1>
+    <p>Welcome to the RudraVX Foundation assessment programme.</p>
+
+    <div class="idbox">
+        <p>Your Artist Test ID</p>
+        <strong id="artistId">Generating...</strong>
+        <button class="secondary" onclick="copyID()">Copy ID</button>
+    </div>
+
+    <div class="info">
+        <div><strong>200</strong><span>Questions per test</span></div>
+        <div><strong>50 Min</strong><span>Time limit</span></div>
+        <div><strong>100</strong><span>Maximum marks</span></div>
+    </div>
+
+    <div class="notice">
+        Once you select Next, your answer will be locked and you cannot return to the previous question.
+        Unanswered questions will remain unanswered.
+        The test will automatically submit after 50 minutes.
+    </div>
+
+    <div id="testList"></div>
+    <div id="resultHistory"></div>
+    <div id="dashboardMessage" class="status"></div>
+</section>
+
+
+<section class="card hidden" id="loading">
+    <div class="loader-content">
+        <div class="loader-circle"></div>
+        <h2>Preparing Your Test</h2>
+        <p>Please wait while your assessment is being prepared.</p>
+        <div class="loading-bar">
+            <div class="loading-bar-fill"></div>
+        </div>
+        <p class="muted">This may take a few moments.</p>
+    </div>
+</section>
+
+
+<section class="card hidden" id="testScreen">
+    <div class="testtop">
+        <div>
+            <p id="testNumber">TEST 01</p>
+            <h2 id="questionCount">Question 1 of 200</h2>
+        </div>
+        <div class="timer" id="timer">50:00</div>
+    </div>
+
+    <div class="progress"><div id="questionProgress"></div></div>
+    <p class="muted" id="category">Music</p>
+    <div class="question" id="questionText"></div>
+    <div id="options"></div>
+
+    <div class="actions">
+        <span class="muted" id="answeredCount">Answered: 0</span>
+        <button class="primary" id="nextButton" onclick="nextQuestion()">Next</button>
+    </div>
+</section>
+
+<section class="card hidden" id="resultScreen">
+    <h1>Test Submitted</h1>
+    <p>Your assessment has been submitted successfully.</p>
+
+    <div class="result" id="score">0/100</div>
+    <p id="resultDetails"></p>
+
+    <div class="idbox">
+        <p>Your Artist Test ID</p>
+        <strong id="resultID"></strong>
+    </div>
+
+    <div class="notice">
+        Keep your Test ID safe. Share your test ID and your screen recording link with the Foundation for verification.
+    </div>
+
+    <h2 id="nextHeading">Continue Assessment?</h2>
+    <p id="nextDescription">Would you like to take your next test now or later?</p>
+
+    <button class="primary full" id="nextTestButton" onclick="startNextTest()">Take Next Test Now</button>
+    <button class="secondary full" onclick="showDashboard()">Take It Later</button>
+</section>
+
+<section class="card hidden" id="completedScreen">
+    <h1>You have Done!</h1>
+    <p>You have successfully completed all five assessment tests.</p>
+
+    <div class="info">
+        <div><strong>5/5</strong><span>Tests completed</span></div>
+        <div><strong>1000</strong><span>Total questions</span></div>
+        <div><strong>250 Min</strong><span>Total test duration</span></div>
+    </div>
+
+    <div class="notice">
+        You cannot take any more assessment tests. Thank you for participating in the RudraVX Foundation assessment programme.
+    </div>
+    <p>Your Artist ID: <strong id="completedID"></strong></p>
+</section>
+
+</main>
+
+<footer>
+RudraVX Foundation · Artist Assessment Programme
+<br><br>
+Questions provided by Open Trivia Database.
+<br>
+Open Trivia Database content is licensed under CC BY-SA 4.0.
+</footer>
+
+<script>
+/* =====================================
+   RUDRAVX FOUNDATION ASSESSMENT
+===================================== */
+
+const TOTAL_TESTS = 5;
+const TOTAL_QUESTIONS = 200;
+const MAX_REQUESTS = 10;
+const TEST_DURATION = 50 * 60 * 1000;
+
+const STORAGE_KEY = "rudravx_artist_assessment_v2";
+
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+let timerInterval = null;
+let loadingTest = false;
+
+/* =====================================
+   INITIAL STATE
+===================================== */
+
+function makeID(){
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "";
+
+    for(let i = 0; i < 5; i++){
+        code += chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    return "RVX-T01-" + code;
+}
+
+if(!state){
+    state = {
+        id: makeID(),
+        completed: [],
+        results: {},
+        activeTest: null,
+        questionBanks: {}
+    };
+
+    saveState();
+}
+
+if(!state.questionBanks) state.questionBanks = {};
+
+function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+document.getElementById("artistId").textContent = state.id;
+
+/* =====================================
+   BASIC FUNCTIONS
+===================================== */
+
+function copyID(){
+    navigator.clipboard.writeText(state.id)
+    .then(() => alert("Test ID copied!"))
+    .catch(() => alert("Your Test ID: " + state.id));
+}
+
+function hideAll(){
+    [
+        "dashboard",
+        "loading",
+        "testScreen",
+        "resultScreen",
+        "completedScreen"
+    ].forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+    });
+}
+
+function showDashboard(){
+    clearInterval(timerInterval);
+    hideAll();
+
+    if(state.completed.length >= TOTAL_TESTS){
+        document.getElementById("completedID").textContent = state.id;
+        document.getElementById("completedScreen").classList.remove("hidden");
+        return;
+    }
+
+    document.getElementById("dashboard").classList.remove("hidden");
+    renderTestList();
+    renderResultHistory();
+}
+
+function wait(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function shuffle(array){
+    const arr = [...array];
+
+    for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    return arr;
+}
+
+/* =====================================
+   DASHBOARD
+===================================== */
+
+function renderTestList(){
+    const list = document.getElementById("testList");
+    const message = document.getElementById("dashboardMessage");
+
+    list.innerHTML = "";
+
+    const nextTest = state.completed.length + 1;
+
+    for(let i = 1; i <= TOTAL_TESTS; i++){
+
+        const done = state.completed.includes(i);
+        const available = i === nextTest;
+
+        const row = document.createElement("div");
+        row.className = "testrow";
+
+        const info = document.createElement("div");
+
+        const title = document.createElement("strong");
+        title.textContent = "Test " + String(i).padStart(2, "0");
+
+        const small = document.createElement("small");
+
+        if(done){
+            small.textContent = "Completed";
+        }else if(available){
+            small.textContent = "Available now";
+        }else{
+            small.textContent = "Locked";
+        }
+
+        info.append(title, small);
+
+        const btn = document.createElement("button");
+        btn.className = done ? "secondary" : "primary";
+        btn.textContent = done ? "Completed" : available ? "Start Test" : "Locked";
+        btn.disabled = !available;
+
+        if(available){
+            btn.onclick = () => prepareTest(i);
+        }
+
+        row.append(info, btn);
+        list.appendChild(row);
+    }
+
+    message.textContent =
+        `You have completed ${state.completed.length} out of ${TOTAL_TESTS} tests.`;
+
+    if(state.activeTest){
+        message.textContent += " An unfinished test is saved on this browser.";
+
+        const resume = document.createElement("button");
+        resume.className = "primary full";
+        resume.textContent = "Resume Current Test";
+        resume.onclick = resumeTest;
+
+        list.appendChild(resume);
+    }
+}
+
+/* =====================================
+   API QUESTION COLLECTION
+===================================== */
+
+function decodeAPI(value){
+    try{
+        return decodeURIComponent(value);
+    }catch{
+        return value;
+    }
+}
+
+function normalizeQuestion(item){
+
+    const question = decodeAPI(item.question).trim();
+    const correct = decodeAPI(item.correct_answer).trim();
+
+    const incorrect = item.incorrect_answers.map(a =>
+        decodeAPI(a).trim()
+    );
+
+    const answers = shuffle([correct, ...incorrect]);
+
+    return {
+        question,
+        answers,
+        correct,
+        category: decodeAPI(item.category)
+    };
+}
+
+
+
+
+async function fetchMusicQuestions(testNumber){
+
+    let collected = [];
+
+    for(let request = 1; request <= MAX_REQUESTS; request++){
+
+        if(collected.length >= TOTAL_QUESTIONS) break;
+
+        // API requests ke beech delay
+        if(request > 1){
+            await wait(5200);
+        }
+
+        const url =
+            "https://opentdb.com/api.php" +
+            "?amount=50" +
+            "&category=12" +
+            "&type=multiple" +
+            "&encode=url3986";
+
+        try{
+
+            const response = await fetch(url);
+
+            if(!response.ok) continue;
+
+            const data = await response.json();
+
+            if(data.response_code !== 0) continue;
+
+            for(const item of data.results){
+
+                const normalized = normalizeQuestion(item);
+
+                // Repeated questions are intentionally allowed.
+                collected.push(normalized);
+
+                if(collected.length >= TOTAL_QUESTIONS){
+                    break;
+                }
+            }
+
+        }catch(error){
+            // Failed request will not stop remaining attempts.
+            continue;
+        }
+    }
+
+    if(collected.length < TOTAL_QUESTIONS){
+
+        throw new Error(
+            "We could not prepare your complete assessment right now. Please try again later."
+        );
+    }
+
+    return shuffle(collected.slice(0, TOTAL_QUESTIONS));
+}
+
+
+async function prepareTest(testNumber){
+
+    if(loadingTest) return;
+
+    if(testNumber !== state.completed.length + 1) return;
+
+    if(state.completed.includes(testNumber)) return;
+
+    loadingTest = true;
+
+    hideAll();
+
+    document.getElementById("loading").classList.remove("hidden");
+
+    try{
+
+        let questions = state.questionBanks[testNumber];
+
+        // Saved questions will be reused.
+        if(!questions || questions.length !== TOTAL_QUESTIONS){
+
+            questions = await fetchMusicQuestions(testNumber);
+
+            state.questionBanks[testNumber] = questions;
+
+            saveState();
+        }
+
+        state.activeTest = {
+            number: testNumber,
+            questions: questions,
+            index: 0,
+            answers: {},
+            endAt: Date.now() + TEST_DURATION
+        };
+
+        saveState();
+
+        loadingTest = false;
+
+        hideAll();
+
+        document.getElementById("testScreen").classList.remove("hidden");
+
+        renderQuestion();
+        startTimer();
+
+    }catch(error){
+
+        loadingTest = false;
+
+        hideAll();
+
+        document.getElementById("dashboard").classList.remove("hidden");
+
+        renderTestList();
+
+        alert(error.message);
+    }
+}
+
+/* =====================================
+   RESUME TEST
+===================================== */
+
+function resumeTest(){
+
+    if(!state.activeTest) return;
+
+    if(Date.now() >= state.activeTest.endAt){
+        submitTest(true);
+        return;
+    }
+
+    hideAll();
+
+    document.getElementById("testScreen").classList.remove("hidden");
+
+    renderQuestion();
+    startTimer();
+}
+
+/* =====================================
+   QUESTION RENDERING
+===================================== */
+
+function renderQuestion(){
+
+    const test = state.activeTest;
+    const q = test.questions[test.index];
+
+    document.getElementById("testNumber").textContent =
+        "TEST " + String(test.number).padStart(2, "0");
+
+    document.getElementById("questionCount").textContent =
+        `Question ${test.index + 1} of ${TOTAL_QUESTIONS}`;
+
+    document.getElementById("questionProgress").style.width =
+        ((test.index + 1) / TOTAL_QUESTIONS * 100) + "%";
+
+    document.getElementById("questionText").textContent = q.question;
+    document.getElementById("category").textContent = q.category;
+
+    const options = document.getElementById("options");
+    options.innerHTML = "";
+
+    q.answers.forEach(answer => {
+
+        const label = document.createElement("label");
+        label.className = "option";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "answer";
+        radio.value = answer;
+
+        if(test.answers[test.index] === answer){
+            radio.checked = true;
+            label.classList.add("selected");
+        }
+
+        radio.onchange = () => {
+
+            test.answers[test.index] = answer;
+            saveState();
+
+            document.querySelectorAll(".option").forEach(el => {
+                el.classList.remove("selected");
+            });
+
+            label.classList.add("selected");
+
+            document.getElementById("answeredCount").textContent =
+                `Answered: ${Object.keys(test.answers).length}`;
+        };
+
+        label.append(radio, document.createTextNode(answer));
+        options.appendChild(label);
+    });
+
+    document.getElementById("answeredCount").textContent =
+        `Answered: ${Object.keys(test.answers).length}`;
+
+    document.getElementById("nextButton").textContent =
+        test.index === TOTAL_QUESTIONS - 1 ? "Submit Test" : "Next";
+}
+
+/* =====================================
+   NEXT QUESTION
+===================================== */
+
+function nextQuestion(){
+
+    const test = state.activeTest;
+    if(!test) return;
+
+    if(test.index < TOTAL_QUESTIONS - 1){
+
+        test.index++;
+        saveState();
+        renderQuestion();
+
+    }else{
+
+        if(confirm("Submit your test now? You cannot change your answers after submission.")){
+            submitTest(false);
+        }
+    }
+}
+
+/* =====================================
+   TIMER
+===================================== */
+
+function startTimer(){
+
+    clearInterval(timerInterval);
+
+    function update(){
+
+        if(!state.activeTest) return;
+
+        const remaining = Math.max(
+            0,
+            state.activeTest.endAt - Date.now()
+        );
+
+        const seconds = Math.ceil(remaining / 1000);
+
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+
+        document.getElementById("timer").textContent =
+            String(mins).padStart(2, "0") + ":" +
+            String(secs).padStart(2, "0");
+
+        if(remaining <= 0){
+            clearInterval(timerInterval);
+            submitTest(true);
+        }
+    }
+
+    update();
+    timerInterval = setInterval(update, 1000);
+}
+
+/* =====================================
+   SUBMIT TEST
+===================================== */
+
+function submitTest(autoSubmitted){
+
+    if(!state.activeTest) return;
+
+    clearInterval(timerInterval);
+
+    const test = state.activeTest;
+
+    let correct = 0;
+    let wrong = 0;
+    let unanswered = 0;
+
+    test.questions.forEach((q, index) => {
+
+        const answer = test.answers[index];
+
+        if(!answer){
+            unanswered++;
+        }else if(answer === q.correct){
+            correct++;
+        }else{
+            wrong++;
+        }
+    });
+
+    const marks = correct / 2;
+    const testNumber = test.number;
+
+    state.results[testNumber] = {
+        correct,
+        wrong,
+        unanswered,
+        marks,
+        autoSubmitted,
+        submittedAt: new Date().toISOString()
+    };
+
+    state.completed.push(testNumber);
+    state.activeTest = null;
+
+    saveState();
+
+    hideAll();
+    document.getElementById("resultScreen").classList.remove("hidden");
+
+    document.getElementById("score").textContent = `${marks}/100`;
+    document.getElementById("resultID").textContent = state.id;
+
+    document.getElementById("resultDetails").textContent =
+        `Correct: ${correct} | Wrong: ${wrong} | Unanswered: ${unanswered}` +
+        (autoSubmitted ? " | Automatically submitted" : "");
+
+    const next = testNumber + 1;
+
+    if(next > TOTAL_TESTS){
+
+        document.getElementById("nextHeading").textContent = "You have Done!";
+
+        document.getElementById("nextDescription").textContent =
+            "You have completed all assessment tests. No further tests are available.";
+
+        document.getElementById("nextTestButton").classList.add("hidden");
+
+    }else{
+
+        document.getElementById("nextHeading").textContent =
+            `Test ${next} is now available`;
+
+        document.getElementById("nextDescription").textContent =
+            "You can take your next test now or return later using this same browser.";
+
+        document.getElementById("nextTestButton").classList.remove("hidden");
+    }
+}
+
+/* =====================================
+   NEXT TEST
+===================================== */
+
+function startNextTest(){
+
+    const next = state.completed.length + 1;
+
+    if(next > TOTAL_TESTS){
+        showDashboard();
+        return;
+    }
+
+    prepareTest(next);
+}
+
+/* =====================================
+   RESULT HISTORY
+===================================== */
+
+function renderResultHistory(){
+
+    const container = document.getElementById("resultHistory");
+    container.innerHTML = "";
+
+    const completedTests = Object.keys(state.results);
+
+    if(completedTests.length === 0) return;
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Your Previous Test Results";
+    heading.style.marginTop = "30px";
+
+    container.appendChild(heading);
+
+    completedTests.sort((a,b) => Number(a) - Number(b));
+
+    completedTests.forEach(testNo => {
+
+        const result = state.results[testNo];
+
+        const row = document.createElement("div");
+        row.className = "testrow";
+
+        const info = document.createElement("div");
+
+        const title = document.createElement("strong");
+        title.textContent = "Test " + String(testNo).padStart(2, "0");
+
+        const small = document.createElement("small");
+        small.textContent = `Score: ${result.marks}/100`;
+
+        info.append(title, small);
+
+        const button = document.createElement("button");
+        button.className = "secondary";
+        button.textContent = "View Result";
+
+        button.onclick = () => viewPreviousResult(testNo);
+
+        row.append(info, button);
+        container.appendChild(row);
+    });
+}
+
+function viewPreviousResult(testNo){
+
+    const result = state.results[testNo];
+
+    if(!result) return;
+
+    hideAll();
+
+    document.getElementById("resultScreen").classList.remove("hidden");
+
+    document.getElementById("score").textContent =
+        `${result.marks}/100`;
+
+    document.getElementById("resultID").textContent = state.id;
+
+    document.getElementById("resultDetails").textContent =
+        `Correct: ${result.correct} | Wrong: ${result.wrong} | Unanswered: ${result.unanswered}` +
+        (result.autoSubmitted ? " | Automatically submitted" : "");
+
+    document.getElementById("nextHeading").textContent =
+        `Test ${testNo} Result`;
+
+    document.getElementById("nextDescription").textContent =
+        `Submitted on: ${new Date(result.submittedAt).toLocaleString()}`;
+
+    document.getElementById("nextTestButton").classList.add("hidden");
+}
+
+/* =====================================
+   START APPLICATION
+===================================== */
+
+showDashboard();
+
+</script>
+</body>
+</html>

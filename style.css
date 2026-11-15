@@ -26,6 +26,7 @@ body {
     background: var(--mp-bg);
     color: var(--mp-text);
     line-height: 1.6;
+    user-select: none;
 }
 
 a {
