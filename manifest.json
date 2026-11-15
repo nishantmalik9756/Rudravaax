@@ -1,27 +1,24 @@
-
 {
   "id": "/",
   "name": "RudraVX",
   "short_name": "RudraVX",
   "description": "Enter the RudraVX Universe",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/play",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
-  "theme_color": "#10141c",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ]
 }
