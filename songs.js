@@ -105,59 +105,59 @@ const musicLibrary = [
             {
                 title: "Raat Mein",
                 artist: "Rudravaax, ANRX BEATS",
-                audio: "music/raat-mein.wav",
+                audio: "music/clean Raat Mein.mp3",
                 cover: "images/signature.jpeg"
             },
 
 
             {
                 title: "Mohobbatein",
-                audio: "music/mohobbatein.wav",
+                audio: "music/Mohobbatein COMP.mp3",
                 cover: "images/signature.jpeg"
             },
 
             ,
             {
                 title: "God Flow",
-                audio: "music/god-flow.wav",
+                audio: "music/God Flow.mp3",
                 cover: "images/signature.jpeg"
             },
             {
                 title: "Crazy Boy",
-                audio: "music/crazy-boy.wav",
+                audio: "music/Crazy Boy.mp3",
                 cover: "images/signature.jpeg"
             },
             {
                 title: "Naaginn",
-                audio: "music/naaginn.wav",
+                audio: "music/Naginn.mp3",
                 cover: "images/signature.jpeg"
             },
             {
                 title: "Dynamite",
-                audio: "music/dynamite.wav",
+                audio: "music/Dyanamite.mp3",
                 cover: "images/signature.jpeg"
             },
 
             {
                 title: "C-O2",
-                audio: "music/c-o2.wav",
+                audio: "music/CO-2 (Insane Drippin').mp3",
                 cover: "images/signature.jpeg"
             },
             {
                 title: "Ishq Bawaal",
-                audio: "music/ishq-bawaal.wav",
+                audio: "music/Ishq Bawaal.mp3",
                 cover: "images/signature.jpeg"
             },
             {
                 title: "NGRRR",
-                audio: "music/ngrrr.wav",
+                audio: "music/NGRRR.mp3",
                 cover: "images/signature.jpeg"
             },
 
             ,
             {
                 title: "Saari Rattiyaan",
-                audio: "music/saari-rattiyaan.wav",
+                audio: "music/Saari Rattiyaan.mp3",
                 cover: "images/signature.jpeg"
             }
         ]
