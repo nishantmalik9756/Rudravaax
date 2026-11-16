@@ -1,136 +1,118 @@
 
-const CACHE_NAME = "rudravaax-v1";
+const CACHE_NAME = "rudravaax-v1.0.31";
 
 const PRECACHE_FILES = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./images/logo0.jpeg",
-  "./images/logo1.png"
+    "./",
+    "./index.html",
+    "./style.css",
+    "./images/logo0.jpeg",
+    "./images/logo1.png"
 ];
 
+// ==================================
+// INSTALL
+// ==================================
+
 self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE_FILES))
-      .then(() => self.skipWaiting())
-  );
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(PRECACHE_FILES))
+            .then(() => self.skipWaiting())
+    );
 });
+
+// ==================================
+// ACTIVATE
+// ==================================
 
 self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener("fetch", event => {
-  const request = event.request;
-  const url = new URL(request.url);
-
-  if (
-    request.method !== "GET" ||
-    url.origin !== self.location.origin
-  ) return;
-
-  // Music files ko automatically cache nahi karna
-  if (url.pathname.includes("/music/")) return;
-
-  if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          if (response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME)
-              .then(cache => cache.put(request, copy));
-          }
-          return response;
-        })
-        .catch(async () => {
-          return await caches.match(request) ||
-                 await caches.match("./index.html");
-        })
-    );
-    return;
-  }
-
-  event.respondWith(
-    caches.match(request).then(cached => {
-      const networkRequest = fetch(request).then(response => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => cache.put(request, copy));
-        }
-        return response;
-      });
-
-      return cached || networkRequest;
-    })
-  );
-});
-
-
-
-self.addEventListener("install", (event) => {
-    self.skipWaiting();
-});
-
-self.addEventListener("activate", (event) => {
     event.waitUntil(
-        caches.keys().then((keys) =>
+        caches.keys().then(keys =>
             Promise.all(
                 keys
-                    .filter((key) => key !== CACHE_NAME)
-                    .map((key) => caches.delete(key))
+                    .filter(key => key !== CACHE_NAME)
+                    .map(key => caches.delete(key))
             )
-        )
+        ).then(() => self.clients.claim())
     );
-
-    self.clients.claim();
 });
 
-self.addEventListener("fetch", (event) => {
+// ==================================
+// FETCH
+// ==================================
+
+self.addEventListener("fetch", event => {
+
     const request = event.request;
-
-    if (request.method !== "GET") return;
-
     const url = new URL(request.url);
 
+    // Only GET requests
+    if (request.method !== "GET") return;
+
+    // Only same-origin requests
     if (url.origin !== self.location.origin) return;
 
     // Music files ko cache nahi karna
-    if (/\.(mp3|wav|flac|m4a)$/i.test(url.pathname)) return;
+    if (
+        url.pathname.includes("/music/") ||
+        /\.(mp3|wav|flac|m4a|aac|ogg)$/i.test(url.pathname)
+    ) {
+        return;
+    }
+
+    // ==================================
+    // HTML PAGES - NETWORK FIRST
+    // ==================================
+
+    if (request.mode === "navigate") {
+
+        event.respondWith(
+            fetch(request)
+                .then(response => {
+
+                    if (response.ok) {
+                        const copy = response.clone();
+
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(request, copy);
+                        });
+                    }
+
+                    return response;
+                })
+                .catch(async () => {
+
+                    return await caches.match(request) ||
+                           await caches.match("./index.html");
+                })
+        );
+
+        return;
+    }
+
+    // ==================================
+    // CSS, JS, IMAGES - CACHE FIRST
+    // ==================================
 
     event.respondWith(
-        fetch(request)
-            .then((response) => {
-                if (response && response.ok) {
-                    const copy = response.clone();
+        caches.match(request).then(cachedResponse => {
 
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(request, copy);
-                    });
-                }
+            const networkRequest = fetch(request)
+                .then(response => {
 
-                return response;
-            })
-            .catch(async () => {
-                const cached = await caches.match(request);
+                    if (response.ok) {
+                        const copy = response.clone();
 
-                if (cached) return cached;
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(request, copy);
+                        });
+                    }
 
-                if (request.mode === "navigate") {
-                    return caches.match("/play.html");
-                }
+                    return response;
+                });
 
-                return Response.error();
-            })
+            return cachedResponse || networkRequest;
+        })
     );
+
 });
