@@ -5,27 +5,10 @@ const musicLibrary = [
     // SINGLES
     // ==================================
 
+   
     {
+
         id: 1,
-        title: "Minor Cheers",
-        artist: "Archak, Rudravaax",
-        type: "Single",
-        cover: "images/minorcheers.jpeg",
-        audio: "music/Minor-Cheers.mp3",
-        },
-
-    {
-        id: 2,
-        title: "You Know My Love",
-        artist: "Archak, Rudravaax",
-        type: "Single",
-        cover: "images/ykml.jpeg",
-        audio: "music/ykml.mp3",
-    },
-
-    {
-
-        id: 3,
         title: "Apsara",
         artist: "Rudravaax",
         type: "Single",
@@ -34,6 +17,15 @@ const musicLibrary = [
         
     },
 
+    {
+    id: 2,
+        title: "Nafrat",
+        artist: "Rudravaax",
+        type: "Single",
+        cover: "images/coming.jpg",
+        audio: "music/.mp3",
+        
+    },
 
     // ==================================
     // EPS
@@ -41,22 +33,47 @@ const musicLibrary = [
 
     {
         id: 3,
-        title: "Uske Liye [COMING SOON]",
+        title: "Uske Liye",
         artist: "Archak, Rudravaax",
         type: "EP",
-        cover: "images/coming.jpg",
+        cover: "images/uske-liye.jpeg",
 
         tracks: [
             {
-                title: "--",
-                audio: "music/coming.mp3",
-                cover: "images/coming.jpg"
+                title: "You Know My Love",
+                audio: "music/ykml.mp3",
+                cover: "images/uske-liye.jpeg"
             },
             {
-                title: "--",
-                audio: "music/track-two.mp3",
-                cover: "images/coming.jpg"
-            }
+                title: "Minor Cheers",
+                audio: "music/Minor-Cheers.mp3",
+                cover: "images/uske-liye.jpeg"
+
+            },
+
+            {  
+        title: "-Coming Soon-",
+        artist: "Archak, Rudravaax",
+        type: "Single",
+        cover: "images/uske-liye.jpeg",
+        audio: "music/.mp3",
+         },
+
+         {
+          title: "-Coming Soon-",
+        artist: "Archak, Rudravaax",
+        type: "Single",
+        cover: "images/uske-liye.jpeg",
+        audio: "music/.mp3",
+         },
+
+         {
+         title: "-Coming Soon-",
+        artist: "Archak, Rudravaax",
+        type: "Single",
+        cover: "images/uske-liye.jpeg",
+        audio: "music/.mp3",
+         },
         ]
     },
 
