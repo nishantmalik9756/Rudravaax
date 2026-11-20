@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "rudravaax-v1.0.31";
+const CACHE_NAME = "rudravaax-v1.0.32";
 
 const PRECACHE_FILES = [
     "./",
