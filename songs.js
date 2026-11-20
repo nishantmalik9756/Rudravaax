@@ -12,8 +12,7 @@ const musicLibrary = [
         type: "Single",
         cover: "images/minorcheers.jpeg",
         audio: "music/Minor-Cheers.mp3",
-        releaseDate: "Today at 1 PM"
-    },
+        },
 
     {
         id: 2,
@@ -22,7 +21,17 @@ const musicLibrary = [
         type: "Single",
         cover: "images/ykml.jpeg",
         audio: "music/ykml.mp3",
-        releaseDate: "Today at 1 PM"
+    },
+
+    {
+
+        id: 3,
+        title: "Apsara",
+        artist: "Rudravaax",
+        type: "Single",
+        cover: "images/apsara.jpeg",
+        audio: "music/Apsara_2.mp3",
+        
     },
 
 
