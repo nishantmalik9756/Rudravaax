@@ -700,44 +700,17 @@ img {
    The compact player stays in its current Spotify-like style. */
 
 /* =====================================================
-   MOBILE ONLY — CLEAN CARDS + COMPACT COLOR-CYCLING PLAYER
+   MOBILE — CLEAN CARDS + COMPACT COLOR-CYCLING PLAYER
+   Replace the existing mobile sections with this block.
 ===================================================== */
 
-@keyframes mobile-player-colors {
-    0%, 16.66% {
-        background: linear-gradient(115deg, #251014, #771c2b);
-        border-color: rgba(255, 105, 120, .25);
-    }
-
-    16.67%, 33.32% {
-        background: linear-gradient(115deg, #211a08, #87651b);
-        border-color: rgba(255, 210, 95, .25);
-    }
-
-    33.33%, 49.98% {
-        background: linear-gradient(115deg, #101010, #343434);
-        border-color: rgba(255, 255, 255, .16);
-    }
-
-    49.99%, 66.64% {
-        background: linear-gradient(115deg, #241208, #a34817);
-        border-color: rgba(255, 160, 90, .25);
-    }
-
-    66.65%, 83.32% {
-        background: linear-gradient(115deg, #071b14, #176644);
-        border-color: rgba(100, 230, 170, .25);
-    }
-
-    83.33%, 100% {
-        background: linear-gradient(115deg, #10101d, #34365f);
-        border-color: rgba(150, 155, 255, .25);
-    }
-}
-
 @media (max-width: 700px) {
+    :root {
+        --mobile-player-gap: 14px;
+    }
+
     body {
-        padding-bottom: 82px;
+        padding-bottom: calc(76px + var(--mobile-player-gap) + env(safe-area-inset-bottom));
     }
 
     /* Header */
@@ -749,22 +722,23 @@ img {
 
     .player-header h1 {
         font-size: 16px;
-        letter-spacing: -.4px;
+        letter-spacing: -.35px;
     }
 
     .player-header > a.active {
         max-width: 40%;
         font-size: 10px;
+        line-height: 1.2;
         text-align: center;
     }
 
     .logo img {
-        width: 33px;
-        height: 33px;
-        border-radius: 8px;
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
     }
 
-    /* Page spacing */
+    /* Main area */
     .music-container {
         padding: 11px 12px 22px;
     }
@@ -777,7 +751,7 @@ img {
         height: 41px;
         padding-left: 40px;
         border-radius: 11px;
-        font-size: 12px;
+        font-size: 13px;
     }
 
     .search-section::before {
@@ -796,36 +770,35 @@ img {
     .music-section h2 {
         margin-bottom: 10px;
         font-size: 19px;
-        letter-spacing: -.4px;
+        letter-spacing: -.45px;
     }
 
-    /* Two compact cards per row */
+    /* Singles, EPs, Albums: slim two-column rows */
     .music-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
     }
 
-    /* Singles, EPs, Albums: short horizontal cards */
     #singlesContainer .music-card,
     #epsContainer .music-card,
     #albumsContainer .music-card {
-        height: 62px;
-        min-height: 0;
-        padding: 5px 7px;
+        min-width: 0;
+        min-height: 58px;
+        padding: 6px;
         display: flex;
         align-items: center;
         gap: 7px;
         overflow: hidden;
         border-radius: 10px;
-        box-shadow: 0 2px 7px rgba(0, 0, 0, .045);
+        box-shadow: 0 2px 8px rgba(20, 20, 25, .045);
     }
 
     #singlesContainer .music-card > img,
     #epsContainer .music-card > img,
     #albumsContainer .music-card > img {
-        width: 46px;
-        height: 46px;
-        flex: 0 0 46px;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
         aspect-ratio: 1;
         object-fit: cover;
         border-radius: 7px;
@@ -839,19 +812,21 @@ img {
         overflow: hidden;
     }
 
-    /* Keep only the song/album title */
+    /* Show the title only; hide artist, tags, and extra text */
     #singlesContainer .music-card h3,
     #epsContainer .music-card h3,
     #albumsContainer .music-card h3 {
-        display: block;
+        display: -webkit-box;
         margin: 0;
         overflow: hidden;
         color: var(--text-primary);
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
         line-height: 1.25;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        letter-spacing: -.1px;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
     }
 
     #singlesContainer .music-card p,
@@ -859,28 +834,25 @@ img {
     #albumsContainer .music-card p,
     #singlesContainer .music-card span:not(.verified-badge),
     #epsContainer .music-card span:not(.verified-badge),
-    #albumsContainer .music-card span:not(.verified-badge),
-    #singlesContainer .verified-badge,
-    #epsContainer .verified-badge,
-    #albumsContainer .verified-badge {
-        display: none !important;
+    #albumsContainer .music-card span:not(.verified-badge) {
+        display: none;
     }
 
-    /* Artist tiles */
+    /* Artists */
     .artist-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 9px;
     }
 
     .artist-card {
-        padding: 11px 5px;
+        padding: 10px 5px;
         border-radius: 11px;
     }
 
     .artist-card img,
     .artist-card .artist-image {
-        width: 66px;
-        height: 66px;
+        width: 68px;
+        height: 68px;
         margin-bottom: 8px;
     }
 
@@ -892,7 +864,7 @@ img {
         font-size: 9px;
     }
 
-    /* Album / artist detail pages */
+    /* Album and artist detail pages */
     .album-section {
         padding: 15px 12px 26px;
     }
@@ -902,12 +874,12 @@ img {
         align-items: flex-start;
         gap: 14px;
         padding: 14px;
-        border-radius: 14px;
+        border-radius: 15px;
     }
 
     .album-info img {
-        width: 145px;
-        height: 145px;
+        width: 150px;
+        height: 150px;
         border-radius: 10px;
     }
 
@@ -926,17 +898,18 @@ img {
     }
 
     .artist-profile-section .artist-info img {
-        width: 76px;
-        height: 76px;
+        width: 78px;
+        height: 78px;
     }
 
-    .artist-profile-section .artist-info h2 {
-        font-size: 17px;
+    .artist-profile-section .artist-info h2,
+    .artist-profile-section > h2 {
+        font-size: 18px;
     }
 
     /* Track list */
     .track-card {
-        min-height: 59px;
+        min-height: 58px;
         gap: 9px;
         padding: 7px;
         border-radius: 10px;
@@ -960,10 +933,10 @@ img {
         height: 31px;
     }
 
-    /* Compact mobile player, lifted slightly from the bottom */
+    /* Compact mobile player, slightly raised from the screen edge */
     .bottom-player {
         right: 8px;
-        bottom: max(13px, calc(env(safe-area-inset-bottom) + 8px));
+        bottom: calc(var(--mobile-player-gap) + env(safe-area-inset-bottom));
         left: 8px;
         width: auto;
         min-height: 0;
@@ -974,72 +947,76 @@ img {
         align-items: center;
         gap: 6px;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, .18);
+        color: #fff;
+        background-color: #261116;
+        background-image: linear-gradient(115deg, #190e13, #54202a, #211114);
+        background-size: 200% 200%;
+        border: 1px solid rgba(255, 255, 255, .16);
         border-radius: 13px;
-        box-shadow: 0 5px 18px rgba(0, 0, 0, .24);
-        animation: mobile-player-colors 9s infinite;
-        transition: background 1.5s ease, border-color 1.5s ease;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, .22);
+        animation: mobile-player-colors 150s infinite;
+        transition:
+            background-color 1.5s ease-in-out,
+            background-image 1.5s ease-in-out,
+            box-shadow 1.5s ease-in-out;
     }
 
-    .bottom-player .current-song {
+    .current-song {
         min-width: 0;
         gap: 8px;
     }
 
-    .bottom-player .current-song img {
+    .current-song img {
         width: 36px;
         height: 36px;
+        flex: 0 0 36px;
         border-radius: 6px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
     }
 
-    .bottom-player .song-meta {
+    .song-meta {
         min-width: 0;
     }
 
-    .bottom-player .current-song h3 {
+    .current-song h3 {
         margin: 0 0 2px;
         color: #fff;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
-    .bottom-player .current-song p {
-        margin: 0;
-        color: rgba(255, 255, 255, .72);
+    .current-song p {
+        color: rgba(255, 255, 255, .74);
         font-size: 9px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
-    .bottom-player .player-controls {
+    .player-controls {
         display: contents;
     }
 
-    .bottom-player .control-buttons {
+    .control-buttons {
         grid-column: 2;
         grid-row: 1;
         gap: 2px;
         margin: 0;
     }
 
-    .bottom-player .control-buttons button {
-        width: 24px;
-        height: 29px;
+    .control-buttons button {
+        width: 23px;
+        height: 28px;
         color: rgba(255, 255, 255, .86);
         font-size: 11px;
     }
 
-    .bottom-player .control-buttons #playPauseBtn {
-        width: 33px;
-        height: 33px;
-        background: #fff;
-        color: #171717;
-        font-size: 14px;
+    .control-buttons button.active {
+        color: #fff;
+    }
+
+    .control-buttons #playPauseBtn {
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, .95);
+        color: #241217;
+        font-size: 13px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .18);
     }
 
@@ -1049,72 +1026,160 @@ img {
     }
 }
 
+/*
+  Each color holds for about 9 seconds, then blends
+  into the next palette over roughly 1.5 seconds.
+  The 150-second cycle uses 15 different color moods.
+*/
+@keyframes mobile-player-colors {
+    0%, 6% {
+        background-color: #32131b;
+        background-image: linear-gradient(115deg, #170d12, #61202d, #251016);
+        box-shadow: 0 5px 18px rgba(82, 20, 34, .28);
+    }
+
+    7%, 13% {
+        background-color: #39290e;
+        background-image: linear-gradient(115deg, #171108, #80601e, #2b1d0a);
+        box-shadow: 0 5px 18px rgba(112, 77, 16, .25);
+    }
+
+    14%, 20% {
+        background-color: #391b0c;
+        background-image: linear-gradient(115deg, #190e08, #89431a, #2a140a);
+        box-shadow: 0 5px 18px rgba(133, 57, 15, .24);
+    }
+
+    21%, 27% {
+        background-color: #112b20;
+        background-image: linear-gradient(115deg, #0b1511, #1d6847, #10241b);
+        box-shadow: 0 5px 18px rgba(19, 103, 65, .24);
+    }
+
+    28%, 34% {
+        background-color: #161d36;
+        background-image: linear-gradient(115deg, #0d101b, #344d91, #141b32);
+        box-shadow: 0 5px 18px rgba(49, 70, 142, .25);
+    }
+
+    35%, 41% {
+        background-color: #32142b;
+        background-image: linear-gradient(115deg, #170d16, #773568, #291327);
+        box-shadow: 0 5px 18px rgba(119, 43, 102, .23);
+    }
+
+    42%, 48% {
+        background-color: #34320d;
+        background-image: linear-gradient(115deg, #151407, #77721c, #28270c);
+        box-shadow: 0 5px 18px rgba(117, 110, 23, .22);
+    }
+
+    49%, 55% {
+        background-color: #0e2b31;
+        background-image: linear-gradient(115deg, #091518, #216674, #10262a);
+        box-shadow: 0 5px 18px rgba(29, 102, 114, .24);
+    }
+
+    56%, 62% {
+        background-color: #3b1715;
+        background-image: linear-gradient(115deg, #190d0c, #914039, #2c1412);
+        box-shadow: 0 5px 18px rgba(146, 54, 46, .24);
+    }
+
+    63%, 69% {
+        background-color: #20233b;
+        background-image: linear-gradient(115deg, #10111b, #505887, #1a1c32);
+        box-shadow: 0 5px 18px rgba(72, 81, 137, .23);
+    }
+
+    70%, 76% {
+        background-color: #33200f;
+        background-image: linear-gradient(115deg, #171008, #835321, #29190c);
+        box-shadow: 0 5px 18px rgba(126, 75, 20, .23);
+    }
+
+    77%, 83% {
+        background-color: #152c18;
+        background-image: linear-gradient(115deg, #0d150b, #467331, #182516);
+        box-shadow: 0 5px 18px rgba(61, 113, 41, .24);
+    }
+
+    84%, 90% {
+        background-color: #321820;
+        background-image: linear-gradient(115deg, #170d12, #813b50, #29131c);
+        box-shadow: 0 5px 18px rgba(126, 45, 70, .23);
+    }
+
+    91%, 97% {
+        background-color: #252525;
+        background-image: linear-gradient(115deg, #101010, #555, #1b1b1b);
+        box-shadow: 0 5px 18px rgba(70, 70, 70, .24);
+    }
+
+    98%, 100% {
+        background-color: #262018;
+        background-image: linear-gradient(115deg, #11100c, #716044, #211c13);
+        box-shadow: 0 5px 18px rgba(112, 91, 53, .22);
+    }
+}
+
 /* Extra narrow phones */
 @media (max-width: 380px) {
     .music-container {
-        padding-right: 9px;
-        padding-left: 9px;
+        padding-right: 10px;
+        padding-left: 10px;
     }
 
     .music-grid {
-        gap: 6px;
+        gap: 7px;
     }
 
     #singlesContainer .music-card,
     #epsContainer .music-card,
     #albumsContainer .music-card {
-        height: 58px;
-        padding: 4px 5px;
-        gap: 5px;
+        min-height: 54px;
+        padding: 5px;
+        gap: 6px;
     }
 
     #singlesContainer .music-card > img,
     #epsContainer .music-card > img,
     #albumsContainer .music-card > img {
-        width: 42px;
-        height: 42px;
-        flex-basis: 42px;
+        width: 37px;
+        height: 37px;
+        flex-basis: 37px;
     }
 
     #singlesContainer .music-card h3,
     #epsContainer .music-card h3,
     #albumsContainer .music-card h3 {
-        font-size: 10px;
+        font-size: 9px;
     }
 
     .bottom-player {
-        right: 5px;
-        left: 5px;
-        padding-right: 6px;
-        padding-left: 6px;
-        gap: 3px;
+        right: 6px;
+        left: 6px;
+        padding-right: 7px;
+        padding-left: 7px;
     }
 
-    .bottom-player .current-song {
-        gap: 6px;
-    }
-
-    .bottom-player .current-song img {
+    .current-song img {
         width: 33px;
         height: 33px;
+        flex-basis: 33px;
     }
 
-    .bottom-player .control-buttons {
-        gap: 0;
-    }
-
-    .bottom-player .control-buttons button {
+    .control-buttons button {
         width: 21px;
-        font-size: 10px;
     }
 
-    .bottom-player .control-buttons #playPauseBtn {
+    .control-buttons #playPauseBtn {
         width: 30px;
         height: 30px;
     }
 }
 
-/* Respect reduced-motion preference */
+/* Keep animation gentle for people who reduce motion */
 @media (prefers-reduced-motion: reduce) {
     .bottom-player {
         animation: none;

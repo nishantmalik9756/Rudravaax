@@ -1,16 +1,10 @@
-
 document.addEventListener("DOMContentLoaded", () => {
-
-    // ==================================
-    // AUDIO ELEMENTS
-    // ==================================
-
+    // Elements
     const audio = document.getElementById("audioPlayer");
 
     const singlesContainer = document.getElementById("singlesContainer");
     const epsContainer = document.getElementById("epsContainer");
     const albumsContainer = document.getElementById("albumsContainer");
-
     const artistsContainer = document.getElementById("artistsContainer");
 
     const albumSection = document.getElementById("albumSection");
@@ -42,47 +36,200 @@ document.addEventListener("DOMContentLoaded", () => {
     const progressBar = document.getElementById("progressBar");
     const volumeBar = document.getElementById("volumeBar");
 
-
-    // ==================================
-    // PLAYER VARIABLES
-    // ==================================
-
-    let playlist = [];
-    let currentIndex = 0;
-    let isShuffle = false;
-    let isRepeat = false;
-    let isPlaying = false;
-
-
-    // ==================================
-    // VERIFIED BADGE
-    // ==================================
-
-   function verifiedName(name) {
-
-    const verifiedArtists = ["rudravaax", "archak"];
-
-    const isVerified = verifiedArtists.includes(
-        name?.trim().toLowerCase()
-    );
-
-    if (!isVerified) {
-        return name;
+    // Stop if the core player markup is missing.
+    if (!audio || !playPauseBtn) {
+        console.error("Player elements were not found on this page.");
+        return;
     }
 
-    return `
-        ${name}
-        <span class="verified-badge"
-              title="Verified Artist"
-              aria-label="Verified Artist">✓</span>
-    `;
-}
+    // Playback state
+    let playlist = [];
+    let currentIndex = 0;
+    let isShuffle = true;
+    let isRepeat = false;
+    let isPlaying = false;
+    let autoPlayLibrary = true;
 
+    // Ignore blank audio paths and obvious placeholder tracks.
+    function isPlayable(song) {
+        if (!song?.audio || !song?.title) return false;
 
-    // ==================================
-    // MAIN PAGE SECTIONS
-    // ==================================
+        const path = song.audio.trim();
+        const title = song.title.trim();
 
+        return (
+            path !== "" &&
+            !/\/\.mp3$/i.test(path) &&
+            !/\\\.mp3$/i.test(path) &&
+            !/coming\s*soon/i.test(title) &&
+            !/^[-–—]+$/.test(title)
+        );
+    }
+
+    function normalizeSong(song, defaults = {}) {
+        return {
+            ...song,
+            artist: song.artist || defaults.artist || "Rudravaax",
+            cover: song.cover || defaults.cover || "images/logo.jpeg",
+            collection: song.collection || defaults.collection || song.title,
+            type: song.type || defaults.type || "Single"
+        };
+    }
+
+    function getLibrarySongs() {
+        if (typeof musicLibrary === "undefined") return [];
+
+        return musicLibrary.flatMap(item => {
+            if (item.type === "Single") {
+                return isPlayable(item)
+                    ? [normalizeSong(item, {
+                        artist: item.artist || "Rudravaax",
+                        cover: item.cover,
+                        collection: item.title,
+                        type: "Single"
+                    })]
+                    : [];
+            }
+
+            if (item.type === "EP" || item.type === "Album") {
+                return (item.tracks || [])
+                    .filter(isPlayable)
+                    .map(track => normalizeSong(track, {
+                        artist: item.artist || "Rudravaax",
+                        cover: item.cover,
+                        collection: item.title,
+                        type: item.type
+                    }));
+            }
+
+            return [];
+        });
+    }
+
+    function shuffleSongs(songs) {
+        const result = [...songs];
+
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [result[i], result[j]] = [result[j], result[i]];
+        }
+
+        return result;
+    }
+
+    function startLibraryMix(firstSongs = []) {
+        const allSongs = getLibrarySongs();
+        const first = firstSongs.filter(isPlayable).map(song => normalizeSong(song));
+        const firstAudioPaths = new Set(first.map(song => song.audio));
+
+        const randomRemainder = shuffleSongs(
+            allSongs.filter(song => !firstAudioPaths.has(song.audio))
+        );
+
+        playlist = [...first, ...randomRemainder];
+        currentIndex = 0;
+        autoPlayLibrary = true;
+
+        if (playlist.length) {
+            playSong(0);
+        } else {
+            console.warn("No playable songs were found in the music library.");
+        }
+    }
+
+    function formatTime(seconds) {
+        if (!Number.isFinite(seconds)) return "0:00";
+
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+
+        return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+    }
+
+    function updatePlayButton() {
+        playPauseBtn.textContent = isPlaying ? "❚❚" : "▶";
+        playPauseBtn.setAttribute("aria-label", isPlaying ? "Pause" : "Play");
+    }
+
+    function playSong(index) {
+        if (!playlist.length) return;
+
+        currentIndex = Math.max(0, Math.min(index, playlist.length - 1));
+        const song = playlist[currentIndex];
+
+        if (!isPlayable(song)) {
+            nextSong();
+            return;
+        }
+
+        audio.src = song.audio;
+        audio.load();
+
+        if (currentTitle) currentTitle.textContent = song.title;
+        if (currentArtist) currentArtist.textContent = song.artist || "Rudravaax";
+        if (currentCover) currentCover.src = song.cover || "images/logo.jpeg";
+        if (currentTime) currentTime.textContent = "0:00";
+        if (duration) duration.textContent = "0:00";
+        if (progressBar) progressBar.value = 0;
+
+        audio.play()
+            .then(() => {
+                isPlaying = true;
+                updatePlayButton();
+            })
+            .catch(error => {
+                console.error("Audio playback error:", error);
+                isPlaying = false;
+                updatePlayButton();
+            });
+    }
+
+    function playWholeAlbum(item, startAtAudio = null) {
+        const albumSongs = (item.tracks || [])
+            .filter(isPlayable)
+            .map(track => normalizeSong(track, {
+                artist: item.artist || "Rudravaax",
+                cover: item.cover,
+                collection: item.title,
+                type: item.type
+            }));
+
+        if (!albumSongs.length) {
+            console.warn(`No playable tracks found for "${item.title}".`);
+            return;
+        }
+
+        if (!startAtAudio) {
+            startLibraryMix(albumSongs);
+            return;
+        }
+
+        const clickedIndex = albumSongs.findIndex(song => song.audio === startAtAudio);
+        const selectedAlbumTracks = clickedIndex >= 0
+            ? albumSongs.slice(clickedIndex)
+            : albumSongs;
+
+        startLibraryMix(selectedAlbumTracks);
+    }
+
+    // Artist verification badge
+    function verifiedName(name) {
+        const verifiedArtists = ["rudravaax", "archak"];
+        const isVerified = verifiedArtists.includes(
+            name?.trim().toLowerCase()
+        );
+
+        if (!isVerified) return name || "";
+
+        return `
+            ${name}
+            <span class="verified-badge"
+                  title="Verified Artist"
+                  aria-label="Verified Artist">✓</span>
+        `;
+    }
+
+    // Main page sections
     const mainSections = [
         singlesContainer?.closest("section"),
         epsContainer?.closest("section"),
@@ -93,806 +240,455 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const header = document.querySelector(".player-header");
 
-
-    // ==================================
-    // SHOW MAIN LIBRARY
-    // ==================================
-
     function showLibrary() {
-
-        albumSection.hidden = true;
-
-        if (artistSection) {
-            artistSection.hidden = true;
-        }
+        if (albumSection) albumSection.hidden = true;
+        if (artistSection) artistSection.hidden = true;
 
         mainSections.forEach(section => {
             section.hidden = false;
         });
 
-        if (header) {
-            header.hidden = false;
-        }
-
+        if (header) header.hidden = false;
     }
 
-
-    // ==================================
-    // HIDE MAIN LIBRARY
-    // ==================================
-
     function hideLibrary() {
-
         mainSections.forEach(section => {
             section.hidden = true;
         });
 
-        if (header) {
-            header.hidden = true;
-        }
-
+        if (header) header.hidden = true;
     }
 
-
-    // ==================================
-    // OPEN ALBUM / EP
-    // ==================================
-
+    // Album and EP detail page
     function openAlbum(item) {
+        if (!albumSection || !albumDetails || !albumTracks) return;
 
         hideLibrary();
-
-        if (artistSection) {
-            artistSection.hidden = true;
-        }
-
+        if (artistSection) artistSection.hidden = true;
         albumSection.hidden = false;
 
         albumDetails.innerHTML = `
-
             <div class="album-info">
-
                 <img
                     src="${item.cover || "images/logo.jpeg"}"
                     alt="${item.title}"
                 >
-
                 <div>
-
                     <h2>${item.title}</h2>
-
                     <p>${item.artist || "Rudravaax"}</p>
-
                     <span>${item.type}</span>
-
+                    <button id="playAlbumBtn" type="button">
+                        ▶ Play ${item.type}
+                    </button>
                 </div>
-
             </div>
-
         `;
+
+        document.getElementById("playAlbumBtn")
+            ?.addEventListener("click", () => playWholeAlbum(item));
 
         albumTracks.innerHTML = "";
 
-        const tracks = item.tracks || [];
-
-        tracks.forEach((track, index) => {
-
+        (item.tracks || []).forEach(track => {
             const trackCard = document.createElement("div");
-
             trackCard.className = "track-card";
 
             trackCard.innerHTML = `
-
                 <img
                     src="${track.cover || item.cover || "images/logo.jpeg"}"
                     alt="${track.title}"
                 >
-
                 <div class="track-info">
-
                     <h4>${track.title}</h4>
-
                     <p>${track.artist || item.artist || "Rudravaax"}</p>
-
                 </div>
-
-                <button class="track-play-btn" type="button">
+                <button class="track-play-btn" type="button" aria-label="Play ${track.title}">
                     ▶
                 </button>
-
             `;
 
-            function playAlbumTrack() {
+            const playThisTrack = () => {
+                if (!isPlayable(track)) return;
 
-                playlist = tracks.map(song => ({
-                    ...song,
-                    artist: song.artist || item.artist || "Rudravaax",
-                    cover: song.cover || item.cover || "images/logo.jpeg"
-                }));
-
-                playSong(index);
-
-            }
+                playWholeAlbum(item, track.audio);
+            };
 
             trackCard.querySelector("button")
-                .addEventListener("click", playAlbumTrack);
+                .addEventListener("click", playThisTrack);
 
-            trackCard.addEventListener("dblclick", playAlbumTrack);
-
+            trackCard.addEventListener("dblclick", playThisTrack);
             albumTracks.appendChild(trackCard);
-
         });
 
         window.scrollTo(0, 0);
-
     }
 
-
-    // ==================================
-    // CLOSE ALBUM
-    // ==================================
-
-    closeAlbum.addEventListener("click", () => {
-
+    closeAlbum?.addEventListener("click", () => {
         showLibrary();
-
         window.scrollTo(0, 0);
-
     });
 
-
-    // ==================================
-    // ARTIST PROFILE
-    // ==================================
-
+    // Artist profile
     function openArtist(artist) {
+        if (!artistSection || !artistDetails || !artistTracks) return;
 
         hideLibrary();
-
-        albumSection.hidden = true;
+        if (albumSection) albumSection.hidden = true;
         artistSection.hidden = false;
 
         artistDetails.innerHTML = `
-
             <div class="album-info artist-info">
-
-                <img
-                    src="${artist.image || "images/logo.jpeg"}"
-                    alt="${artist.name}"
-                >
-
+                <img src="${artist.image || "images/logo.jpeg"}" alt="${artist.name}">
                 <div>
-
                     <h2>${verifiedName(artist.name)}</h2>
-
                     <p>${artist.bio || "Music Artist"}</p>
-
-                    <span>
-                        ${artist.songs.length} Songs
-                    </span>
-
+                    <span>${artist.songs.length} Songs</span>
                 </div>
-
             </div>
-
         `;
 
         artistTracks.innerHTML = "";
 
         if (!artist.songs.length) {
-
-            artistTracks.innerHTML = `
-                <p>No songs available yet.</p>
-            `;
-
+            artistTracks.innerHTML = "<p>No songs available yet.</p>";
+            window.scrollTo(0, 0);
             return;
-
         }
 
         artist.songs.forEach((song, index) => {
-
             const trackCard = document.createElement("div");
-
             trackCard.className = "track-card";
 
             trackCard.innerHTML = `
-
-                <img
-                    src="${song.cover || "images/logo.jpeg"}"
-                    alt="${song.title}"
-                >
-
+                <img src="${song.cover || "images/logo.jpeg"}" alt="${song.title}">
                 <div class="track-info">
-
                     <h4>${song.title}</h4>
-
                     <p>${song.artist || artist.name}</p>
-
-                    <small>
-                        ${song.collection || song.type || "Single"}
-                    </small>
-
+                    <small>${song.collection || song.type || "Single"}</small>
                 </div>
-
-                <button class="track-play-btn" type="button">
+                <button class="track-play-btn" type="button" aria-label="Play ${song.title}">
                     ▶
                 </button>
-
             `;
 
-            function playArtistTrack() {
+            const playArtistSong = () => {
+                if (!isPlayable(song)) return;
 
-                playlist = artist.songs.map(item => ({
-                    ...item
-                }));
+                const artistSongs = artist.songs
+                    .filter(isPlayable)
+                    .map(item => normalizeSong(item));
 
-                playSong(index);
+                const selected = artistSongs.find(
+                    item => item.audio === song.audio
+                );
 
-            }
+                startLibraryMix(selected ? [selected] : []);
+            };
 
             trackCard.querySelector("button")
-                .addEventListener("click", playArtistTrack);
+                .addEventListener("click", playArtistSong);
 
-            trackCard.addEventListener("dblclick", playArtistTrack);
-
+            trackCard.addEventListener("dblclick", playArtistSong);
             artistTracks.appendChild(trackCard);
-
         });
 
         window.scrollTo(0, 0);
-
     }
 
-
-    // ==================================
-    // CLOSE ARTIST PROFILE
-    // ==================================
-
     closeArtist?.addEventListener("click", () => {
-
         showLibrary();
-
         window.scrollTo(0, 0);
-
     });
 
-
-    // ==================================
-    // CREATE ARTIST CARD
-    // ==================================
-
+    // Artist cards
     function createArtistCard(artist) {
-
         const card = document.createElement("div");
-
         card.className = "music-card artist-card";
 
         card.innerHTML = `
-
-            <img
-                src="${artist.image || "images/logo.jpeg"}"
-                alt="${artist.name}"
-                loading="lazy"
-            >
-
+            <img src="${artist.image || "images/logo.jpeg"}"
+                 alt="${artist.name}"
+                 loading="lazy">
             <div class="music-card-info">
-
                 <h3>${verifiedName(artist.name)}</h3>
-
                 <p>Artist</p>
-
-                <span>
-                    ${artist.songs.length} Songs
-                </span>
-
+                <span>${artist.songs.length} Songs</span>
             </div>
-
         `;
 
-        card.addEventListener("click", () => {
-
-            openArtist(artist);
-
-        });
-
+        card.addEventListener("click", () => openArtist(artist));
         return card;
-
     }
 
-
-    // ==================================
-    // DISPLAY ARTISTS
-    // ==================================
-
     function displayArtists() {
-
         if (!artistsContainer) return;
 
         artistsContainer.innerHTML = "";
 
         if (typeof rudraVXArtists === "undefined") {
-
-            artistsContainer.innerHTML = `
-                <p>Artist library not available.</p>
-            `;
-
+            artistsContainer.innerHTML = "<p>Artist library not available.</p>";
             return;
-
         }
 
         rudraVXArtists.forEach(artist => {
-
-            artistsContainer.appendChild(
-                createArtistCard(artist)
-            );
-
+            artistsContainer.appendChild(createArtistCard(artist));
         });
-
     }
 
-
-    // ==================================
-    // CREATE MUSIC CARD
-    // ==================================
-
+    // Music cards
     function createCard(item) {
-
         const card = document.createElement("div");
-
         card.className = "music-card";
 
         card.innerHTML = `
-
-            <img
-                src="${item.cover || "images/logo.jpeg"}"
-                alt="${item.title}"
-                loading="lazy"
-            >
-
+            <img src="${item.cover || "images/logo.jpeg"}"
+                 alt="${item.title}"
+                 loading="lazy">
             <div class="music-card-info">
-
                 <h3>${item.title}</h3>
-
                 <p>${item.artist || "Rudravaax"}</p>
-
                 <span>${item.type}</span>
-
             </div>
-
         `;
 
         card.addEventListener("click", () => {
-
             if (item.type === "Single") {
+                const song = normalizeSong(item, {
+                    artist: item.artist || "Rudravaax",
+                    cover: item.cover,
+                    collection: item.title,
+                    type: "Single"
+                });
 
-                playlist = [{
-                    ...item,
-                    artist: item.artist || "Rudravaax"
-                }];
-
-                playSong(0);
-
+                startLibraryMix([song]);
             } else {
-
                 openAlbum(item);
-
             }
-
         });
 
         return card;
-
     }
 
-
-    // ==================================
-    // DISPLAY MUSIC LIBRARY
-    // ==================================
-
     function displayLibrary() {
+        if (!singlesContainer || !epsContainer || !albumsContainer) return;
 
         singlesContainer.innerHTML = "";
         epsContainer.innerHTML = "";
         albumsContainer.innerHTML = "";
 
-        musicLibrary.forEach(item => {
+        if (typeof musicLibrary === "undefined") {
+            console.error("musicLibrary was not found. Check that songs.js loads before player.js.");
+            return;
+        }
 
+        musicLibrary.forEach(item => {
             const card = createCard(item);
 
             if (item.type === "Single") {
-
                 singlesContainer.appendChild(card);
-
-            }
-
-            else if (item.type === "EP") {
-
+            } else if (item.type === "EP") {
                 epsContainer.appendChild(card);
-
-            }
-
-            else if (item.type === "Album") {
-
+            } else if (item.type === "Album") {
                 albumsContainer.appendChild(card);
-
             }
-
         });
 
         displayArtists();
-
     }
 
-
-    // ==================================
-    // PLAY SONG
-    // ==================================
-
-    function playSong(index) {
-
-        if (!playlist.length) return;
-
-        currentIndex = index;
-
-        const song = playlist[currentIndex];
-
-        audio.src = song.audio;
-
-        currentTitle.textContent = song.title;
-
-        currentArtist.textContent =
-            song.artist || "Rudravaax";
-
-        currentCover.src =
-            song.cover || "images/logo.jpeg";
-
-        audio.play().then(() => {
-
-            isPlaying = true;
-            updatePlayButton();
-
-        }).catch(error => {
-
-            console.error("Audio playback error:", error);
-
-            isPlaying = false;
-            updatePlayButton();
-
-        });
-
-    }
-
-
-    // ==================================
-    // PLAY / PAUSE
-    // ==================================
-
+    // Start random library playback when Play is pressed before a queue exists.
     function togglePlay() {
-
-        if (!audio.src) {
-
-            if (playlist.length) {
-                playSong(currentIndex);
-            }
-
+        if (!playlist.length || !audio.src) {
+            startLibraryMix();
             return;
-
         }
 
         if (audio.paused) {
-
-            audio.play().then(() => {
-
-                isPlaying = true;
-                updatePlayButton();
-
-            }).catch(console.error);
-
+            audio.play()
+                .then(() => {
+                    isPlaying = true;
+                    updatePlayButton();
+                })
+                .catch(console.error);
         } else {
-
             audio.pause();
-
             isPlaying = false;
-
             updatePlayButton();
-
         }
-
     }
-
-
-    function updatePlayButton() {
-
-        playPauseBtn.textContent =
-            isPlaying ? "❚❚" : "▶";
-
-    }
-
 
     playPauseBtn.addEventListener("click", togglePlay);
 
-
     audio.addEventListener("play", () => {
-
         isPlaying = true;
         updatePlayButton();
-
     });
-
 
     audio.addEventListener("pause", () => {
-
         isPlaying = false;
         updatePlayButton();
-
     });
 
-
-    // ==================================
-    // NEXT SONG
-    // ==================================
-
+    // Next song
     function nextSong() {
-
-        if (!playlist.length) return;
-
-        if (isShuffle && playlist.length > 1) {
-
-            let randomIndex;
-
-            do {
-
-                randomIndex = Math.floor(
-                    Math.random() * playlist.length
-                );
-
-            } while (randomIndex === currentIndex);
-
-            playSong(randomIndex);
-
+        if (!playlist.length) {
+            startLibraryMix();
+            return;
         }
 
-        else if (currentIndex < playlist.length - 1) {
-
+        if (currentIndex < playlist.length - 1) {
             playSong(currentIndex + 1);
-
+            return;
         }
 
-        else if (isRepeat) {
+        if (autoPlayLibrary) {
+            const allSongs = getLibrarySongs();
+            const currentSong = playlist[currentIndex];
 
+            const choices = allSongs.filter(
+                song => song.audio !== currentSong?.audio
+            );
+
+            if (!choices.length) {
+                playSong(0);
+                return;
+            }
+
+            const randomSong = choices[
+                Math.floor(Math.random() * choices.length)
+            ];
+
+            playlist = [randomSong];
+            currentIndex = 0;
             playSong(0);
-
+            return;
         }
 
-        else {
-
-            audio.pause();
-            audio.currentTime = 0;
-
-            isPlaying = false;
-
-            updatePlayButton();
-
+        if (isRepeat) {
+            playSong(0);
+            return;
         }
 
+        audio.pause();
+        audio.currentTime = 0;
+        isPlaying = false;
+        updatePlayButton();
     }
 
+    nextBtn?.addEventListener("click", nextSong);
 
-    nextBtn.addEventListener("click", nextSong);
-
-
-    // ==================================
-    // PREVIOUS SONG
-    // ==================================
-
+    // Previous song
     function previousSong() {
-
         if (!playlist.length) return;
 
         if (audio.currentTime > 3) {
-
             audio.currentTime = 0;
-
             return;
-
         }
 
         if (currentIndex > 0) {
-
             playSong(currentIndex - 1);
-
-        }
-
-        else if (isRepeat) {
-
-            playSong(playlist.length - 1);
-
-        }
-
-        else {
-
-            audio.currentTime = 0;
-
-        }
-
-    }
-
-
-    previousBtn.addEventListener("click", previousSong);
-
-
-    // ==================================
-    // SHUFFLE
-    // ==================================
-
-    shuffleBtn.addEventListener("click", () => {
-
-        isShuffle = !isShuffle;
-
-        shuffleBtn.classList.toggle("active", isShuffle);
-
-    });
-
-
-    // ==================================
-    // REPEAT
-    // ==================================
-
-    repeatBtn.addEventListener("click", () => {
-
-        isRepeat = !isRepeat;
-
-        repeatBtn.classList.toggle("active", isRepeat);
-
-    });
-
-
-    // ==================================
-    // SONG ENDED
-    // ==================================
-
-    audio.addEventListener("ended", () => {
-
-        if (isRepeat && playlist.length === 1) {
-
-            playSong(0);
-
         } else {
-
-            nextSong();
-
+            audio.currentTime = 0;
         }
-
-    });
-
-
-    // ==================================
-    // FORMAT TIME
-    // ==================================
-
-    function formatTime(seconds) {
-
-        if (!Number.isFinite(seconds)) return "0:00";
-
-        const minutes = Math.floor(seconds / 60);
-
-        const remainingSeconds = Math.floor(seconds % 60);
-
-        return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
-
     }
 
+    previousBtn?.addEventListener("click", previousSong);
 
-    // ==================================
-    // AUDIO DURATION
-    // ==================================
-
-    audio.addEventListener("loadedmetadata", () => {
-
-        duration.textContent = formatTime(audio.duration);
-
+    // Shuffle toggle. Library playback continues to randomize after the queue.
+    shuffleBtn?.addEventListener("click", () => {
+        isShuffle = !isShuffle;
+        shuffleBtn.classList.toggle("active", isShuffle);
     });
 
+    // Repeat toggle
+    repeatBtn?.addEventListener("click", () => {
+        isRepeat = !isRepeat;
+        repeatBtn.classList.toggle("active", isRepeat);
+    });
 
-    // ==================================
-    // PROGRESS BAR
-    // ==================================
+    // Automatically continue when a song ends.
+    audio.addEventListener("ended", () => {
+        if (isRepeat && playlist.length === 1 && !autoPlayLibrary) {
+            playSong(0);
+        } else {
+            nextSong();
+        }
+    });
+
+    // Skip tracks that fail to load.
+    audio.addEventListener("error", () => {
+        if (!playlist.length) return;
+
+        console.warn("Could not load this track; skipping to another song.");
+        nextSong();
+    });
+
+    // Duration and progress
+    audio.addEventListener("loadedmetadata", () => {
+        if (duration) duration.textContent = formatTime(audio.duration);
+    });
 
     audio.addEventListener("timeupdate", () => {
+        if (currentTime) currentTime.textContent = formatTime(audio.currentTime);
 
-        currentTime.textContent =
-            formatTime(audio.currentTime);
-
-        if (audio.duration) {
-
-            progressBar.value =
-                (audio.currentTime / audio.duration) * 100;
-
+        if (progressBar && audio.duration) {
+            progressBar.value = (audio.currentTime / audio.duration) * 100;
         }
-
     });
 
-
-    progressBar.addEventListener("input", () => {
-
+    progressBar?.addEventListener("input", () => {
         if (audio.duration) {
-
-            audio.currentTime =
-                (progressBar.value / 100) * audio.duration;
-
+            audio.currentTime = (Number(progressBar.value) / 100) * audio.duration;
         }
-
     });
 
-
-    // ==================================
-    // VOLUME
-    // ==================================
-
-    volumeBar.addEventListener("input", () => {
-
+    // Volume
+    if (volumeBar) {
         audio.volume = Number(volumeBar.value);
 
-    });
+        volumeBar.addEventListener("input", () => {
+            audio.volume = Number(volumeBar.value);
+        });
+    }
 
-    audio.volume = Number(volumeBar.value);
-
-
-    // ==================================
-    // SEARCH
-    // ==================================
-
-    searchInput.addEventListener("input", () => {
-
+    // Search
+    searchInput?.addEventListener("input", () => {
         const query = searchInput.value.toLowerCase().trim();
 
+        if (!searchResults || !searchResultsSection) return;
         searchResults.innerHTML = "";
 
         if (!query) {
-
             searchResultsSection.hidden = true;
 
-            if (!albumSection.hidden || (artistSection && !artistSection.hidden)) {
-                return;
-            }
+            if (albumSection && !albumSection.hidden) return;
+            if (artistSection && !artistSection.hidden) return;
 
             mainSections.forEach(section => {
                 section.hidden = false;
             });
 
             return;
-
         }
 
         showLibrary();
-
         mainSections.forEach(section => {
             section.hidden = true;
         });
-
         searchResultsSection.hidden = false;
 
         const results = musicLibrary.filter(item => {
-
-            const titleMatch =
-                item.title.toLowerCase().includes(query);
-
-            const artistMatch =
-                (item.artist || "").toLowerCase().includes(query);
+            const titleMatch = item.title.toLowerCase().includes(query);
+            const artistMatch = (item.artist || "").toLowerCase().includes(query);
 
             const trackMatch = (item.tracks || []).some(track =>
-
-                track.title.toLowerCase().includes(query) ||
+                (track.title || "").toLowerCase().includes(query) ||
                 (track.artist || "").toLowerCase().includes(query)
-
             );
 
             return titleMatch || artistMatch || trackMatch;
-
         });
-
-
-        // SEARCH ARTISTS
 
         const matchingArtists =
             typeof rudraVXArtists !== "undefined"
@@ -901,85 +697,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 )
                 : [];
 
-
         matchingArtists.forEach(artist => {
-
-            searchResults.appendChild(
-                createArtistCard(artist)
-            );
-
+            searchResults.appendChild(createArtistCard(artist));
         });
-
 
         results.forEach(item => {
-
-            searchResults.appendChild(
-                createCard(item)
-            );
-
+            searchResults.appendChild(createCard(item));
         });
 
-
         if (!results.length && !matchingArtists.length) {
-
-            searchResults.innerHTML =
-                "<p>No songs or artists found.</p>";
-
+            searchResults.innerHTML = "<p>No songs or artists found.</p>";
         }
-
     });
 
-
-    // ==================================
-    // INITIALIZE
-    // ==================================
-
+    // Initialize
     displayLibrary();
 
-});
-
-
-// ==========================================
-// ECOSYSTEM POPUP
-// ==========================================
-
-document.addEventListener("DOMContentLoaded", () => {
-
+    // Ecosystem popup, if present on this page
     const popup = document.getElementById("ecosystemPopup");
-
-    const closeBtn = document.getElementById("closePopup");
-
+    const closePopup = document.getElementById("closePopup");
     const gotItBtn = document.getElementById("gotItBtn");
 
-    if (!popup) return;
+    if (popup) {
+        setTimeout(() => popup.classList.add("show"), 500);
 
-    setTimeout(() => {
+        const closeEcosystemPopup = () => popup.classList.remove("show");
 
-        popup.classList.add("show");
+        closePopup?.addEventListener("click", closeEcosystemPopup);
+        gotItBtn?.addEventListener("click", closeEcosystemPopup);
 
-    }, 500);
-
-
-    function closeEcosystemPopup() {
-
-        popup.classList.remove("show");
-
+        popup.addEventListener("click", event => {
+            if (event.target === popup) closeEcosystemPopup();
+        });
     }
-
-
-    closeBtn?.addEventListener("click", closeEcosystemPopup);
-
-    gotItBtn?.addEventListener("click", closeEcosystemPopup);
-
-
-    popup.addEventListener("click", event => {
-
-        if (event.target === popup) {
-
-            closeEcosystemPopup();
-
-        }
-
-    });
-
 });
