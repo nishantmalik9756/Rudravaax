@@ -1,50 +1,22 @@
-
 /* =====================================================
-   RUDRAVX PLAY
-   APPLE MUSIC INSPIRED COMPLETE DESIGN
-===================================================== */
-
-/* =====================================================
-   01. ROOT VARIABLES
+   RUDRAVX PLAY — RESPONSIVE STYLES
 ===================================================== */
 
 :root {
     --apple-red: #fa243c;
     --apple-red-dark: #df1933;
     --apple-red-light: #fff0f2;
-
     --text-primary: #1d1d1f;
     --text-secondary: #6e6e73;
     --text-tertiary: #99999f;
-
-    --background: #ffffff;
+    --background: #fff;
     --background-secondary: #f5f5f7;
-    --background-hover: #f0f0f2;
-
     --border: #e5e5ea;
-
-    --shadow-small: 0 3px 12px rgba(0,0,0,0.045);
-    --shadow-medium: 0 8px 28px rgba(0,0,0,0.07);
-
-    --radius-small: 9px;
-    --radius-medium: 14px;
-    --radius-large: 20px;
-
-    --player-height: 100px;
-
-    --font:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        "Segoe UI",
-        sans-serif;
+    --shadow-small: 0 3px 12px rgba(0, 0, 0, .045);
+    --shadow-medium: 0 8px 28px rgba(0, 0, 0, .07);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+        "SF Pro Text", "Segoe UI", sans-serif;
 }
-
-
-/* =====================================================
-   02. GLOBAL RESET
-===================================================== */
 
 * {
     box-sizing: border-box;
@@ -58,14 +30,11 @@ html {
 
 body {
     margin: 0;
-    padding: 0 0 calc(var(--player-height) + 25px);
-
+    padding: 0 0 125px;
     background: var(--background);
     color: var(--text-primary);
-
     font-family: var(--font);
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 button,
@@ -85,74 +54,60 @@ img {
     display: none !important;
 }
 
-
-/* =====================================================
-   03. HEADER
-===================================================== */
+/* Header */
 
 .player-header {
     position: sticky;
     top: 0;
     z-index: 1000;
-
     width: 100%;
     min-height: 68px;
-
     padding: 0 5%;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    background: rgba(255,255,255,0.94);
-
+    gap: 16px;
+    background: rgba(255, 255, 255, .94);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
-
-    border-bottom: 1px solid rgba(0,0,0,0.07);
+    border-bottom: 1px solid rgba(0, 0, 0, .07);
 }
 
 .player-header h1 {
     margin: 0;
-
-    color: var(--text-primary);
-
     font-size: 21px;
     font-weight: 750;
-    letter-spacing: -0.7px;
+    letter-spacing: -.7px;
+}
+
+.player-header > a.active {
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-decoration: none;
 }
 
 .logo {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
-    text-decoration: none;
 }
 
 .logo img {
     display: block;
-
     width: 42px;
     height: 42px;
-
     object-fit: cover;
     border-radius: 10px;
 }
 
-
-/* =====================================================
-   04. MAIN MUSIC CONTAINER
-===================================================== */
+/* Main library */
 
 .music-container {
     width: 100%;
     max-width: 1250px;
-
     margin: 0 auto;
-
     padding: 18px 28px 35px;
 }
-
-/* SECTION SPACING */
 
 .music-section {
     margin: 0 0 34px;
@@ -160,174 +115,102 @@ img {
 
 .music-section h2 {
     margin: 0 0 16px;
-
-    color: var(--text-primary);
-
     font-size: 25px;
     font-weight: 750;
-    letter-spacing: -0.8px;
+    letter-spacing: -.8px;
 }
 
-
-/* =====================================================
-   05. SEARCH BAR
-===================================================== */
+/* Search */
 
 .search-section {
+    position: relative;
     width: 100%;
-
     margin: 0 0 19px;
 }
 
 .search-section input {
     display: block;
-
     width: 100%;
     height: 47px;
-
     padding: 0 18px 0 43px;
-
     border: 1px solid transparent;
     border-radius: 12px;
-
     outline: none;
-
-    background-color: var(--background-secondary);
-
+    background: var(--background-secondary);
     color: var(--text-primary);
-
     font-size: 14px;
-    font-weight: 450;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-
     appearance: none;
     -webkit-appearance: none;
-}
-
-/* Search icon */
-
-.search-section {
-    position: relative;
+    transition: background .2s, border-color .2s, box-shadow .2s;
 }
 
 .search-section::before {
     content: "";
-
     position: absolute;
-
-    left: 16px;
     top: 50%;
-
+    left: 16px;
     width: 13px;
     height: 13px;
-
     border: 2px solid var(--text-secondary);
     border-radius: 50%;
-
     transform: translateY(-60%);
-
     pointer-events: none;
 }
 
 .search-section::after {
     content: "";
-
     position: absolute;
-
-    left: 29px;
     top: 26px;
-
+    left: 29px;
     width: 7px;
     height: 2px;
-
     background: var(--text-secondary);
-
     transform: rotate(45deg);
     transform-origin: left center;
-
     pointer-events: none;
 }
 
 .search-section input:focus {
-    background: white;
-
-    border-color: rgba(250,36,60,0.35);
-
-    box-shadow: 0 0 0 3px rgba(250,36,60,0.07);
+    background: #fff;
+    border-color: rgba(250, 36, 60, .35);
+    box-shadow: 0 0 0 3px rgba(250, 36, 60, .07);
 }
 
 .search-section input::placeholder {
     color: var(--text-tertiary);
 }
 
-.search-section input::-webkit-search-cancel-button {
-    cursor: pointer;
-}
-
-
-/* =====================================================
-   06. MUSIC GRID
-===================================================== */
+/* Music cards — desktop grid */
 
 .music-grid {
     display: grid;
-
     grid-template-columns: repeat(4, minmax(0, 1fr));
-
     gap: 20px;
 }
 
-
-/* =====================================================
-   07. MUSIC CARDS
-===================================================== */
-
 .music-card {
     min-width: 0;
-
     padding: 12px;
-
-    background: var(--background);
-
+    background: #fff;
     border: 1px solid var(--border);
-    border-radius: var(--radius-medium);
-
+    border-radius: 14px;
     box-shadow: var(--shadow-small);
-
     cursor: pointer;
-
-    transition:
-        transform 0.22s ease,
-        box-shadow 0.22s ease,
-        border-color 0.22s ease;
+    transition: transform .22s, box-shadow .22s, border-color .22s;
 }
 
 .music-card:hover {
     transform: translateY(-4px);
-
-    border-color: rgba(250,36,60,0.25);
-
+    border-color: rgba(250, 36, 60, .25);
     box-shadow: var(--shadow-medium);
-}
-
-.music-card:active {
-    transform: scale(0.98);
 }
 
 .music-card > img {
     display: block;
-
     width: 100%;
-    aspect-ratio: 1 / 1;
-
+    aspect-ratio: 1;
     object-fit: cover;
-
     background: var(--background-secondary);
-
     border-radius: 10px;
 }
 
@@ -337,21 +220,14 @@ img {
 
 .music-card h3 {
     margin: 13px 0 5px;
-
-    color: var(--text-primary);
-
     font-size: 15px;
     font-weight: 700;
-    letter-spacing: -0.25px;
-
     overflow-wrap: anywhere;
 }
 
 .music-card p {
     margin: 0 0 8px;
-
     color: var(--text-secondary);
-
     font-size: 12px;
     line-height: 1.5;
 }
@@ -359,122 +235,54 @@ img {
 .music-card span:not(.verified-badge) {
     display: inline-flex;
     align-items: center;
-
     padding: 5px 9px;
-
     background: var(--apple-red-light);
-
     color: var(--apple-red);
-
     border-radius: 20px;
-
     font-size: 10px;
     font-weight: 700;
 }
 
-
-/* =====================================================
-   08. VERIFIED ARTIST BADGE
-===================================================== */
-
-.verified-badge {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 17px;
-    height: 17px;
-
-    margin-left: 5px;
-
-    background: #3897f0;
-    color: white;
-
-    border-radius: 50%;
-
-    font-size: 11px;
-    font-weight: 900;
-
-    line-height: 1;
-
-    vertical-align: middle;
-
-    flex-shrink: 0;
-}
-
-
-/* =====================================================
-   09. ARTIST GRID
-===================================================== */
+/* Artist cards */
 
 .artist-grid {
     display: grid;
-
     grid-template-columns: repeat(5, minmax(0, 1fr));
-
     gap: 20px;
 }
 
 .artist-card {
     min-width: 0;
-
     padding: 18px 12px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
     text-align: center;
-
-    background: white;
-
+    background: #fff;
     border: 1px solid var(--border);
-    border-radius: var(--radius-medium);
-
+    border-radius: 14px;
     box-shadow: var(--shadow-small);
-
     cursor: pointer;
-
-    transition: 0.22s ease;
+    transition: .22s ease;
 }
 
 .artist-card:hover {
     transform: translateY(-4px);
-
-    border-color: rgba(250,36,60,0.25);
-
+    border-color: rgba(250, 36, 60, .25);
     box-shadow: var(--shadow-medium);
 }
 
 .artist-card img,
 .artist-card .artist-image {
     display: block;
-
     width: 125px;
     height: 125px;
-
     max-width: 100%;
-
     margin: 0 auto 13px;
-
-    aspect-ratio: 1 / 1;
-
+    aspect-ratio: 1;
     object-fit: cover;
-
-    border-radius: 50%;
-
-    background: var(--background-secondary);
-
     border: 3px solid #f1f1f3;
-
-    transition: 0.25s ease;
-}
-
-.artist-card:hover img,
-.artist-card:hover .artist-image {
-    border-color: rgba(250,36,60,0.5);
-    transform: scale(1.04);
+    border-radius: 50%;
 }
 
 .artist-card .music-card-info {
@@ -483,143 +291,93 @@ img {
 
 .artist-card h3 {
     display: flex;
-
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-
     margin: 0;
-
-    color: var(--text-primary);
-
     font-size: 14px;
     font-weight: 750;
-
     overflow-wrap: anywhere;
 }
 
 .artist-card p {
     margin: 7px 0 0;
-
     color: var(--text-secondary);
-
     font-size: 12px;
 }
 
 .artist-card span:not(.verified-badge) {
     display: inline-block;
-
     margin-top: 8px;
-
     color: var(--text-tertiary);
-
     font-size: 11px;
 }
 
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 17px;
+    height: 17px;
+    margin-left: 5px;
+    flex: 0 0 auto;
+    background: #3897f0;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 900;
+}
 
-/* =====================================================
-   10. ALBUM / EP DETAILS PAGE
-===================================================== */
+/* Album and artist details */
 
 .album-section {
     width: 100%;
     max-width: 1050px;
-
     margin: 0 auto;
-
     padding: 28px 30px 45px;
 }
-
-/* BACK BUTTON */
 
 #closeAlbum,
 #closeArtist,
 .back-btn {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
     min-height: 39px;
-
     padding: 0 16px;
-
     margin: 0 0 20px;
-
     background: var(--background-secondary);
-
     color: var(--text-primary);
-
     border: 1px solid transparent;
-
     border-radius: 9px;
-
     font-size: 13px;
     font-weight: 650;
-
-    transition: 0.2s ease;
 }
-
-#closeAlbum:hover,
-#closeArtist:hover,
-.back-btn:hover {
-    background: var(--apple-red-light);
-
-    color: var(--apple-red);
-
-    border-color: rgba(250,36,60,0.15);
-}
-
-#closeAlbum:active,
-#closeArtist:active,
-.back-btn:active {
-    transform: scale(0.97);
-}
-
-
-/* ALBUM INFORMATION */
 
 #albumDetails,
 #artistDetails {
     width: 100%;
-
     margin: 0 0 28px;
 }
 
 .album-info {
     display: flex;
-
     align-items: center;
-
     gap: 30px;
-
     padding: 25px;
-
     background: var(--background-secondary);
-
-    border-radius: var(--radius-large);
+    border-radius: 20px;
 }
 
 .album-info img {
     display: block;
-
     width: 190px;
     height: 190px;
-
-    flex-shrink: 0;
-
+    flex: 0 0 auto;
     object-fit: cover;
-
     border-radius: 13px;
-
     box-shadow: var(--shadow-medium);
 }
 
 .album-info h2 {
     margin: 0 0 10px;
-
-    color: var(--text-primary);
-
     font-size: 30px;
     font-weight: 800;
     letter-spacing: -1px;
@@ -627,41 +385,26 @@ img {
 
 .album-info p {
     margin: 0 0 12px;
-
     color: var(--text-secondary);
-
     font-size: 14px;
     line-height: 1.6;
 }
 
 .album-info span:not(.verified-badge) {
     display: inline-block;
-
     padding: 6px 11px;
-
     background: var(--apple-red-light);
-
     color: var(--apple-red);
-
     border-radius: 20px;
-
     font-size: 11px;
     font-weight: 700;
 }
-
-/* Artist name in profile */
 
 .artist-info h2 {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 2px;
 }
-
-
-/* =====================================================
-   11. ARTIST PROFILE
-===================================================== */
 
 .artist-profile-section {
     max-width: 1050px;
@@ -670,107 +413,63 @@ img {
 .artist-profile-section .artist-info img {
     width: 180px;
     height: 180px;
-
-    aspect-ratio: 1 / 1;
-
+    aspect-ratio: 1;
+    border: 4px solid #fff;
     border-radius: 50%;
-
-    border: 4px solid white;
 }
 
 .artist-profile-section .artist-info {
-    background: white;
-
+    background: #fff;
     border: 1px solid var(--border);
-
     box-shadow: var(--shadow-small);
 }
 
 .artist-profile-section > h2,
 .album-section > h2 {
     margin: 25px 0 17px;
-
-    color: var(--text-primary);
-
     font-size: 23px;
     font-weight: 750;
-    letter-spacing: -0.5px;
 }
 
-
-/* =====================================================
-   12. TRACK LIST
-===================================================== */
+/* Track list */
 
 #albumTracks,
 #artistTracks {
     display: flex;
     flex-direction: column;
-
     gap: 8px;
-
     width: 100%;
 }
 
 .track-card {
     display: flex;
-
     align-items: center;
-
     gap: 14px;
-
     min-height: 72px;
-
     padding: 10px 13px;
-
-    background: white;
-
+    background: #fff;
     border: 1px solid var(--border);
-
     border-radius: 11px;
-
     cursor: pointer;
-
-    transition: 0.2s ease;
-}
-
-.track-card:hover {
-    background: var(--background-secondary);
-
-    border-color: rgba(250,36,60,0.2);
-}
-
-.track-card:active {
-    transform: scale(0.99);
 }
 
 .track-card img {
     display: block;
-
     width: 49px;
     height: 49px;
-
-    flex-shrink: 0;
-
+    flex: 0 0 auto;
     object-fit: cover;
-
     border-radius: 7px;
 }
 
 .track-info {
     flex: 1;
-
     min-width: 0;
 }
 
 .track-info h4 {
     margin: 0 0 5px;
-
-    color: var(--text-primary);
-
     font-size: 14px;
-    font-weight: 700;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -778,11 +477,8 @@ img {
 
 .track-info p {
     margin: 0;
-
     color: var(--text-secondary);
-
     font-size: 12px;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -790,112 +486,61 @@ img {
 
 .track-info small {
     display: block;
-
     margin-top: 4px;
-
     color: var(--text-tertiary);
-
     font-size: 10px;
 }
 
 .track-play-btn {
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     width: 37px;
     height: 37px;
-
-    flex-shrink: 0;
-
+    flex: 0 0 auto;
     background: var(--background-secondary);
-
     color: var(--apple-red);
-
-    border: none;
-
+    border: 0;
     border-radius: 50%;
-
-    font-size: 13px;
-
-    transition: 0.2s ease;
 }
 
-.track-play-btn:hover {
-    background: var(--apple-red);
-    color: white;
-}
-
-
-/* =====================================================
-   13. APPLE MUSIC BOTTOM PLAYER
-===================================================== */
+/* Desktop full player panel */
 
 .bottom-player {
     position: fixed;
-
-    bottom: 0;
-    left: 0;
-
-    width: 100%;
-
-    min-height: 100px;
-
-    padding: 12px 32px;
-
-    display: grid;
-
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 1.5fr) minmax(0, 1fr);
-
-    align-items: center;
-
-    gap: 28px;
-
-    background: rgba(255,255,255,0.96);
-
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-
-    border-top: 1px solid rgba(0,0,0,0.09);
-
-    box-shadow: 0 -5px 25px rgba(0,0,0,0.045);
-
+    right: 24px;
+    bottom: 24px;
     z-index: 2000;
-
-    font-family: var(--font);
+    width: min(360px, calc(100vw - 48px));
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    background: rgba(255, 255, 255, .97);
+    border: 1px solid rgba(0, 0, 0, .08);
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .18);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
 }
-
-
-/* =====================================================
-   14. CURRENT SONG
-===================================================== */
 
 .current-song {
     display: flex;
-
     align-items: center;
-
-    gap: 13px;
-
+    gap: 12px;
     min-width: 0;
 }
 
 .current-song img {
     display: block;
-
-    width: 61px;
-    height: 61px;
-
-    flex-shrink: 0;
-
+    width: 58px;
+    height: 58px;
+    flex: 0 0 auto;
     object-fit: cover;
-
-    border-radius: 8px;
-
+    border-radius: 9px;
     background: var(--background-secondary);
-
-    box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+    box-shadow: var(--shadow-small);
 }
 
 .song-meta {
@@ -904,12 +549,8 @@ img {
 
 .current-song h3 {
     margin: 0 0 5px;
-
-    color: var(--text-primary);
-
     font-size: 14px;
     font-weight: 700;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -917,407 +558,125 @@ img {
 
 .current-song p {
     margin: 0;
-
     color: var(--text-secondary);
-
     font-size: 12px;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-
-/* =====================================================
-   15. PLAYER CONTROLS
-===================================================== */
-
 .player-controls {
     width: 100%;
-    max-width: 530px;
-
-    margin: auto;
 }
 
 .control-buttons {
     display: flex;
-
     align-items: center;
     justify-content: center;
-
-    gap: 23px;
-
-    margin-bottom: 8px;
+    gap: 15px;
+    margin: 0 0 8px;
 }
 
 .control-buttons button {
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     width: 32px;
     height: 32px;
-
     padding: 0;
-
     background: transparent;
-
     color: #55555a;
-
-    border: none;
+    border: 0;
     border-radius: 50%;
-
-    font-size: 17px;
-
-    transition: 0.2s ease;
-}
-
-.control-buttons button:hover {
-    color: var(--apple-red);
-
-    transform: scale(1.12);
+    font-size: 15px;
 }
 
 .control-buttons button.active {
     color: var(--apple-red);
 }
 
-/* PLAY / PAUSE */
-
 .control-buttons #playPauseBtn {
-    width: 43px;
-    height: 43px;
-
+    width: 42px;
+    height: 42px;
     background: var(--apple-red);
-
-    color: white;
-
+    color: #fff;
     border-radius: 50%;
-
-    font-size: 18px;
-
-    box-shadow: 0 4px 12px rgba(250,36,60,0.20);
+    font-size: 17px;
+    box-shadow: 0 4px 12px rgba(250, 36, 60, .2);
 }
-
-.control-buttons #playPauseBtn:hover {
-    background: var(--apple-red-dark);
-
-    color: white;
-
-    transform: scale(1.07);
-}
-
-
-/* =====================================================
-   16. PROGRESS BAR
-===================================================== */
 
 .progress-container {
     display: flex;
-
     align-items: center;
-
-    gap: 10px;
-
+    gap: 8px;
     width: 100%;
 }
 
 .progress-container span {
-    min-width: 31px;
-
+    min-width: 30px;
     color: var(--text-secondary);
-
     font-size: 10px;
-
     text-align: center;
-
     font-variant-numeric: tabular-nums;
+}
+
+#progressBar,
+#volumeBar {
+    height: 4px;
+    margin: 0;
+    padding: 0;
+    background: #dedee3;
+    border: 0;
+    border-radius: 20px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
 }
 
 #progressBar {
     flex: 1;
-
     width: 100%;
-
-    height: 4px;
-
-    margin: 0;
-
-    padding: 0;
-
-    background: #dedee3;
-
-    border: none;
-
-    border-radius: 20px;
-
-    outline: none;
-
-    appearance: none;
-    -webkit-appearance: none;
-
-    cursor: pointer;
 }
 
-#progressBar::-webkit-slider-thumb {
+#progressBar::-webkit-slider-thumb,
+#volumeBar::-webkit-slider-thumb {
     width: 11px;
     height: 11px;
-
     background: var(--apple-red);
-
-    border: none;
+    border: 0;
     border-radius: 50%;
-
     appearance: none;
     -webkit-appearance: none;
 }
 
-#progressBar::-moz-range-thumb {
+#progressBar::-moz-range-thumb,
+#volumeBar::-moz-range-thumb {
     width: 11px;
     height: 11px;
-
     background: var(--apple-red);
-
-    border: none;
+    border: 0;
     border-radius: 50%;
 }
-
-
-/* =====================================================
-   17. VOLUME
-===================================================== */
 
 .volume-control {
     display: flex;
-
     align-items: center;
-    justify-content: flex-end;
-
-    gap: 12px;
+    gap: 10px;
 }
 
 .volume-control span {
     color: var(--text-secondary);
-
-    font-size: 19px;
+    font-size: 17px;
 }
 
 #volumeBar {
-    width: 105px;
-    height: 4px;
-
-    margin: 0;
-
-    background: #dedee3;
-
-    border: none;
-    border-radius: 20px;
-
-    outline: none;
-
-    appearance: none;
-    -webkit-appearance: none;
-
-    cursor: pointer;
-}
-
-#volumeBar::-webkit-slider-thumb {
-    width: 11px;
-    height: 11px;
-
-    background: var(--apple-red);
-
-    border: none;
-    border-radius: 50%;
-
-    appearance: none;
-    -webkit-appearance: none;
-}
-
-#volumeBar::-moz-range-thumb {
-    width: 11px;
-    height: 11px;
-
-    background: var(--apple-red);
-
-    border: none;
-    border-radius: 50%;
-}
-
-
-/* =====================================================
-   18. ECOSYSTEM POPUP
-===================================================== */
-
-.ecosystem-popup-overlay {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 99999;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px;
-
-    background: rgba(0,0,0,0.42);
-
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-
-    opacity: 0;
-    visibility: hidden;
-
-    transition: 0.3s ease;
-}
-
-.ecosystem-popup-overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.ecosystem-popup {
-    position: relative;
-
     width: 100%;
-    max-width: 370px;
-
-    padding: 32px 25px 25px;
-
-    background: white;
-
-    border: 1px solid rgba(255,255,255,0.5);
-
-    border-radius: 23px;
-
-    text-align: center;
-
-    box-shadow: 0 25px 80px rgba(0,0,0,0.17);
-
-    transform: translateY(15px) scale(0.97);
-
-    transition: 0.3s ease;
 }
 
-.ecosystem-popup-overlay.show .ecosystem-popup {
-    transform: translateY(0) scale(1);
-}
-
-.popup-close {
-    position: absolute;
-
-    top: 12px;
-    right: 15px;
-
-    width: 32px;
-    height: 32px;
-
-    background: var(--background-secondary);
-
-    color: var(--text-secondary);
-
-    border: none;
-
-    border-radius: 50%;
-
-    font-size: 22px;
-
-    cursor: pointer;
-}
-
-.popup-icon {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 56px;
-    height: 56px;
-
-    margin: 0 auto 18px;
-
-    background: var(--apple-red-light);
-
-    color: var(--apple-red);
-
-    border-radius: 17px;
-
-    font-size: 29px;
-}
-
-.ecosystem-popup h2 {
-    margin: 0 0 12px;
-
-    color: var(--text-primary);
-
-    font-size: 23px;
-    font-weight: 750;
-    letter-spacing: -0.6px;
-}
-
-.ecosystem-popup p {
-    margin: 0 0 23px;
-
-    color: var(--text-secondary);
-
-    font-size: 14px;
-    line-height: 1.7;
-}
-
-.ecosystem-popup p strong {
-    color: var(--apple-red);
-}
-
-.popup-got-it {
-    width: 100%;
-
-    min-height: 45px;
-
-    background: var(--apple-red);
-
-    color: white;
-
-    border: none;
-    border-radius: 12px;
-
-    font-size: 14px;
-    font-weight: 700;
-
-    transition: 0.2s ease;
-}
-
-.popup-got-it:hover {
-    background: var(--apple-red-dark);
-}
-
-
-/* =====================================================
-   19. FOCUS AND ACCESSIBILITY
-===================================================== */
-
-button:focus-visible,
-input:focus-visible {
-    outline: 2px solid var(--apple-red);
-
-    outline-offset: 3px;
-}
-
-button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-}
-
-
-/* =====================================================
-   20. TABLET RESPONSIVE
-===================================================== */
+/* Tablet */
 
 @media (max-width: 1000px) {
-
     .music-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -1327,376 +686,443 @@ button:disabled {
     }
 
     .bottom-player {
-        grid-template-columns: minmax(0, 1fr) minmax(260px, 1.5fr);
+        right: 18px;
+        bottom: 18px;
+        width: min(330px, calc(100vw - 36px));
     }
 
     .volume-control {
         display: none;
     }
-
 }
 
+/* Mobile: album cards are horizontal, two per row.
+   The compact player stays in its current Spotify-like style. */
 
 /* =====================================================
-   21. MOBILE RESPONSIVE
+   MOBILE ONLY — CLEAN CARDS + COMPACT COLOR-CYCLING PLAYER
 ===================================================== */
 
+@keyframes mobile-player-colors {
+    0%, 16.66% {
+        background: linear-gradient(115deg, #251014, #771c2b);
+        border-color: rgba(255, 105, 120, .25);
+    }
+
+    16.67%, 33.32% {
+        background: linear-gradient(115deg, #211a08, #87651b);
+        border-color: rgba(255, 210, 95, .25);
+    }
+
+    33.33%, 49.98% {
+        background: linear-gradient(115deg, #101010, #343434);
+        border-color: rgba(255, 255, 255, .16);
+    }
+
+    49.99%, 66.64% {
+        background: linear-gradient(115deg, #241208, #a34817);
+        border-color: rgba(255, 160, 90, .25);
+    }
+
+    66.65%, 83.32% {
+        background: linear-gradient(115deg, #071b14, #176644);
+        border-color: rgba(100, 230, 170, .25);
+    }
+
+    83.33%, 100% {
+        background: linear-gradient(115deg, #10101d, #34365f);
+        border-color: rgba(150, 155, 255, .25);
+    }
+}
+
 @media (max-width: 700px) {
-
-    :root {
-        --player-height: 145px;
-    }
-
     body {
-        padding-bottom: 170px;
+        padding-bottom: 82px;
     }
 
-    /* HEADER */
-
+    /* Header */
     .player-header {
-        min-height: 59px;
-
-        padding: 0 16px;
+        min-height: 54px;
+        padding: 0 12px;
+        gap: 7px;
     }
 
     .player-header h1 {
-        font-size: 18px;
+        font-size: 16px;
+        letter-spacing: -.4px;
+    }
+
+    .player-header > a.active {
+        max-width: 40%;
+        font-size: 10px;
+        text-align: center;
     }
 
     .logo img {
-        width: 37px;
-        height: 37px;
-    }
-
-    /* MAIN CONTENT */
-
-    .music-container {
-        padding: 12px 15px 25px;
-    }
-
-    /* SEARCH */
-
-    .search-section {
-        margin-bottom: 17px;
-    }
-
-    .search-section input {
-        height: 43px;
-
-        font-size: 13px;
-    }
-
-    .search-section::after {
-        top: 24px;
-    }
-
-    /* SECTIONS */
-
-    .music-section {
-        margin-bottom: 27px;
-    }
-
-    .music-section h2 {
-        margin-bottom: 13px;
-
-        font-size: 21px;
-    }
-
-    /* MUSIC GRID */
-
-    .music-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-
-        gap: 12px;
-    }
-
-    .music-card {
-        padding: 9px;
-
-        border-radius: 12px;
-    }
-
-    .music-card > img {
+        width: 33px;
+        height: 33px;
         border-radius: 8px;
     }
 
-    .music-card h3 {
-        margin-top: 10px;
-
-        font-size: 13px;
+    /* Page spacing */
+    .music-container {
+        padding: 11px 12px 22px;
     }
 
-    .music-card p {
+    .search-section {
+        margin-bottom: 15px;
+    }
+
+    .search-section input {
+        height: 41px;
+        padding-left: 40px;
+        border-radius: 11px;
+        font-size: 12px;
+    }
+
+    .search-section::before {
+        left: 14px;
+    }
+
+    .search-section::after {
+        top: 23px;
+        left: 27px;
+    }
+
+    .music-section {
+        margin-bottom: 23px;
+    }
+
+    .music-section h2 {
+        margin-bottom: 10px;
+        font-size: 19px;
+        letter-spacing: -.4px;
+    }
+
+    /* Two compact cards per row */
+    .music-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    /* Singles, EPs, Albums: short horizontal cards */
+    #singlesContainer .music-card,
+    #epsContainer .music-card,
+    #albumsContainer .music-card {
+        height: 62px;
+        min-height: 0;
+        padding: 5px 7px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, .045);
+    }
+
+    #singlesContainer .music-card > img,
+    #epsContainer .music-card > img,
+    #albumsContainer .music-card > img {
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 7px;
+    }
+
+    #singlesContainer .music-card-info,
+    #epsContainer .music-card-info,
+    #albumsContainer .music-card-info {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    /* Keep only the song/album title */
+    #singlesContainer .music-card h3,
+    #epsContainer .music-card h3,
+    #albumsContainer .music-card h3 {
+        display: block;
+        margin: 0;
+        overflow: hidden;
+        color: var(--text-primary);
         font-size: 11px;
+        font-weight: 700;
+        line-height: 1.25;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    /* ARTISTS */
+    #singlesContainer .music-card p,
+    #epsContainer .music-card p,
+    #albumsContainer .music-card p,
+    #singlesContainer .music-card span:not(.verified-badge),
+    #epsContainer .music-card span:not(.verified-badge),
+    #albumsContainer .music-card span:not(.verified-badge),
+    #singlesContainer .verified-badge,
+    #epsContainer .verified-badge,
+    #albumsContainer .verified-badge {
+        display: none !important;
+    }
 
+    /* Artist tiles */
     .artist-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-
-        gap: 11px;
+        gap: 9px;
     }
 
     .artist-card {
-        padding: 12px 6px;
-
-        border-radius: 12px;
+        padding: 11px 5px;
+        border-radius: 11px;
     }
 
     .artist-card img,
     .artist-card .artist-image {
-        width: 76px;
-        height: 76px;
-
-        margin-bottom: 10px;
+        width: 66px;
+        height: 66px;
+        margin-bottom: 8px;
     }
 
     .artist-card h3 {
-        font-size: 11px;
-    }
-
-    .artist-card p {
         font-size: 10px;
     }
 
-    /* ALBUM PAGE */
+    .artist-card p {
+        font-size: 9px;
+    }
 
+    /* Album / artist detail pages */
     .album-section {
-        padding: 17px 15px 30px;
+        padding: 15px 12px 26px;
     }
 
     .album-info {
         flex-direction: column;
-
         align-items: flex-start;
-
-        gap: 18px;
-
-        padding: 17px;
-
-        border-radius: 16px;
+        gap: 14px;
+        padding: 14px;
+        border-radius: 14px;
     }
 
     .album-info img {
-        width: 175px;
-        height: 175px;
-
-        border-radius: 11px;
+        width: 145px;
+        height: 145px;
+        border-radius: 10px;
     }
 
     .album-info h2 {
-        font-size: 24px;
+        font-size: 21px;
     }
 
     .album-info p {
-        font-size: 13px;
+        font-size: 12px;
     }
-
-    /* ARTIST PROFILE */
 
     .artist-profile-section .artist-info {
         flex-direction: row;
-
         align-items: center;
-
-        gap: 15px;
+        gap: 12px;
     }
 
     .artist-profile-section .artist-info img {
-        width: 95px;
-        height: 95px;
+        width: 76px;
+        height: 76px;
     }
 
     .artist-profile-section .artist-info h2 {
-        font-size: 20px;
+        font-size: 17px;
     }
 
-    .artist-profile-section > h2 {
-        font-size: 20px;
-    }
-
-    /* TRACKS */
-
+    /* Track list */
     .track-card {
-        gap: 11px;
-
-        min-height: 65px;
-
-        padding: 9px;
+        min-height: 59px;
+        gap: 9px;
+        padding: 7px;
+        border-radius: 10px;
     }
 
     .track-card img {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
     }
 
     .track-info h4 {
-        font-size: 12px;
-    }
-
-    .track-info p {
         font-size: 11px;
     }
 
-    .track-play-btn {
-        width: 34px;
-        height: 34px;
-    }
-
-    /* MOBILE PLAYER */
-
-    .bottom-player {
-        bottom: 0;
-        left: 0;
-
-        width: 100%;
-
-        min-height: 0;
-
-        padding: 10px 14px 13px;
-
-        display: grid;
-
-        grid-template-columns: minmax(0, 1fr) auto;
-
-        grid-template-rows: auto auto;
-
-        gap: 9px 12px;
-
-        border-radius: 14px 14px 0 0;
-
-        box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
-    }
-
-    .current-song {
-        gap: 10px;
-
-        min-width: 0;
-    }
-
-    .current-song img {
-        width: 45px;
-        height: 45px;
-
-        border-radius: 6px;
-    }
-
-    .current-song h3 {
-        font-size: 12px;
-    }
-
-    .current-song p {
+    .track-info p {
         font-size: 10px;
     }
 
-    .player-controls {
+    .track-play-btn {
+        width: 31px;
+        height: 31px;
+    }
+
+    /* Compact mobile player, lifted slightly from the bottom */
+    .bottom-player {
+        right: 8px;
+        bottom: max(13px, calc(env(safe-area-inset-bottom) + 8px));
+        left: 8px;
+        width: auto;
+        min-height: 0;
+        padding: 7px 9px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: 1fr;
+        align-items: center;
+        gap: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, .18);
+        border-radius: 13px;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, .24);
+        animation: mobile-player-colors 9s infinite;
+        transition: background 1.5s ease, border-color 1.5s ease;
+    }
+
+    .bottom-player .current-song {
+        min-width: 0;
+        gap: 8px;
+    }
+
+    .bottom-player .current-song img {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+    }
+
+    .bottom-player .song-meta {
+        min-width: 0;
+    }
+
+    .bottom-player .current-song h3 {
+        margin: 0 0 2px;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .bottom-player .current-song p {
+        margin: 0;
+        color: rgba(255, 255, 255, .72);
+        font-size: 9px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .bottom-player .player-controls {
         display: contents;
     }
 
-    .control-buttons {
+    .bottom-player .control-buttons {
         grid-column: 2;
         grid-row: 1;
-
-        gap: 11px;
-
+        gap: 2px;
         margin: 0;
     }
 
-    .control-buttons button {
-        width: 27px;
-        height: 30px;
+    .bottom-player .control-buttons button {
+        width: 24px;
+        height: 29px;
+        color: rgba(255, 255, 255, .86);
+        font-size: 11px;
+    }
 
+    .bottom-player .control-buttons #playPauseBtn {
+        width: 33px;
+        height: 33px;
+        background: #fff;
+        color: #171717;
         font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .18);
     }
 
-    .control-buttons #playPauseBtn {
-        width: 37px;
-        height: 37px;
-
-        font-size: 16px;
-    }
-
-    .progress-container {
-        grid-column: 1 / -1;
-        grid-row: 2;
-
-        width: 100%;
-
-        gap: 7px;
-    }
-
-    .progress-container span {
-        min-width: 29px;
-
-        font-size: 9px;
-    }
-
-    #progressBar {
-        height: 4px;
-    }
-
-    .volume-control {
+    .bottom-player .progress-container,
+    .bottom-player .volume-control {
         display: none;
     }
-
 }
 
-
-/* =====================================================
-   22. SMALL MOBILE
-===================================================== */
-
+/* Extra narrow phones */
 @media (max-width: 380px) {
-
     .music-container {
-        padding-left: 11px;
-        padding-right: 11px;
+        padding-right: 9px;
+        padding-left: 9px;
     }
 
     .music-grid {
-        gap: 9px;
+        gap: 6px;
     }
 
-    .artist-grid {
-        gap: 8px;
+    #singlesContainer .music-card,
+    #epsContainer .music-card,
+    #albumsContainer .music-card {
+        height: 58px;
+        padding: 4px 5px;
+        gap: 5px;
     }
 
-    .artist-card img,
-    .artist-card .artist-image {
-        width: 67px;
-        height: 67px;
+    #singlesContainer .music-card > img,
+    #epsContainer .music-card > img,
+    #albumsContainer .music-card > img {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    #singlesContainer .music-card h3,
+    #epsContainer .music-card h3,
+    #albumsContainer .music-card h3 {
+        font-size: 10px;
     }
 
     .bottom-player {
-        padding-left: 10px;
-        padding-right: 10px;
-
-        gap: 8px;
+        right: 5px;
+        left: 5px;
+        padding-right: 6px;
+        padding-left: 6px;
+        gap: 3px;
     }
 
-    .control-buttons {
-        gap: 7px;
+    .bottom-player .current-song {
+        gap: 6px;
     }
 
-    .control-buttons button {
-        width: 25px;
+    .bottom-player .current-song img {
+        width: 33px;
+        height: 33px;
     }
 
-    .control-buttons #playPauseBtn {
-        width: 34px;
-        height: 34px;
+    .bottom-player .control-buttons {
+        gap: 0;
     }
 
+    .bottom-player .control-buttons button {
+        width: 21px;
+        font-size: 10px;
+    }
+
+    .bottom-player .control-buttons #playPauseBtn {
+        width: 30px;
+        height: 30px;
+    }
 }
 
-
-/* =====================================================
-   23. LARGE DESKTOP
-===================================================== */
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .bottom-player {
+        animation: none;
+    }
+}
+/* Large desktop */
 
 @media (min-width: 1400px) {
-
     .music-container {
         max-width: 1350px;
     }
@@ -1704,34 +1130,27 @@ button:disabled {
     .music-grid {
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
-
 }
 
+/* Accessibility */
 
-/* =====================================================
-   24. REDUCED MOTION
-===================================================== */
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--apple-red);
+    outline-offset: 3px;
+}
+
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
 
 @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
         scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
     }
-
-}
-
-.search-section {
-    margin-bottom: 19px;
-}
-
-.music-container {
-    padding-top: 18px;
-}
-
-.music-section {
-    margin-bottom: 34px;
 }
