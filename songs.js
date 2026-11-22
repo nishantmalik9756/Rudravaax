@@ -10,7 +10,7 @@ const musicLibrary = [
 
         id: 1,
         title: "Apsara",
-        artist: "Rudravaax",
+        artist: "Rudravaax, Vansh Giri Mehar",
         type: "Single",
         cover: "images/apsara.jpeg",
         audio: "music/Apsara_2.mp3",
@@ -115,7 +115,7 @@ const musicLibrary = [
 
             {
                 title: "Raat Mein",
-                artist: "Rudravaax, ANRX BEATS",
+                artist: "Rudravaax, ANRX-BEATS",
                 audio: "music/clean Raat Mein.mp3",
                 cover: "images/signature.jpeg"
             },
@@ -199,7 +199,7 @@ const artistProfiles = {
         bio: "Rapper"
     },
 
-    "ANRX BEATS": {
+    "ANRX-BEATS": {
         name: "ANRX BEATS",
         image: "images/artists/anrxbeats.jpeg",
         bio: "Music Producer"
@@ -208,6 +208,12 @@ const artistProfiles = {
     "NA-SAMAJH": {
         name: "NA-SAMAJH",
         image: "images/artists/nasamajh.jpeg",
+        bio: "Singer, Rapper"
+    },
+
+    "Vansh Giri Mehar": {
+        name: "Vansh Giri Mehar",
+        image: "images/artists/.jpeg",
         bio: "Singer, Rapper"
     }
 

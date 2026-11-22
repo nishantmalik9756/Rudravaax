@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Artist verification badge
     function verifiedName(name) {
-        const verifiedArtists = ["rudravaax", "archak"];
+        const verifiedArtists = ["rudravaax", "archak", "na-samajh", "anrx-beats"];
         const isVerified = verifiedArtists.includes(
             name?.trim().toLowerCase()
         );
