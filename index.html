@@ -31,231 +31,727 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="main.css">
+
+   <style>
+    :root {
+        --green: #00ff00;
+        --orange: #ff9b24;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+
+    html,
+    body {
+        min-height: 100%;
+        margin: 0;
+        color: #fff;
+        background: #000 !important;
+    }
+
+    body {
+        position: relative;
+        isolation: isolate;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Fixed Santa background */
+    #santa-background {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        display: block;
+        width: 100vw;
+        max-width: none !important;
+        height: 100vh;
+        object-fit: cover;
+        object-position: center;
+        background: #000;
+        opacity: .7;
+        filter: brightness(.58);
+        pointer-events: none;
+    }
+
+    /* Black fade at the top and bottom of the background image */
+    #santa-fade {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: linear-gradient(
+            to bottom,
+            #000 0%,
+            rgba(0, 0, 0, .72) 12%,
+            transparent 34%,
+            transparent 66%,
+            rgba(0, 0, 0, .72) 88%,
+            #000 100%
+        );
+    }
+
+    /* Snow overlay */
+    #snow-overlay {
+        position: fixed;
+        inset: -100% 0 0;
+        z-index: 20;
+        pointer-events: none;
+        opacity: .65;
+        background-image:
+            radial-gradient(3px 3px at 20px 30px, #fff 95%, transparent),
+            radial-gradient(2px 2px at 100px 150px, #fff 95%, transparent),
+            radial-gradient(3px 3px at 180px 80px, #fff 95%, transparent),
+            radial-gradient(2px 2px at 260px 210px, #fff 95%, transparent),
+            radial-gradient(2px 2px at 330px 45px, #fff 95%, transparent);
+        background-size: 360px 260px;
+        animation: snowfall 14s linear infinite;
+    }
+
+    @keyframes snowfall {
+        from { transform: translateY(-10%); }
+        to   { transform: translateY(75%); }
+    }
+
+    /* Keep app content above the background */
+    .music-container,
+    .album-section,
+    .christmas-countdown,
+    .doomsday-screen {
+        position: relative;
+        z-index: 1;
+        background-color: transparent;
+    }
+
+    /* White header */
+    .player-header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        color: #111;
+        background: rgba(255, 255, 255, .97);
+    }
+
+    .player-header h1,
+    .player-header > a.active {
+        color: #111;
+    }
+
+    /* Countdown panel */
+    .christmas-countdown,
+    .doomsday-screen {
+        box-sizing: border-box;
+        width: fit-content;
+        max-width: calc(100% - 24px);
+        margin: 12px auto;
+        padding: 12px;
+        overflow: hidden;
+        text-align: center;
+        border: 0;
+        border-radius: 10px;
+    }
+
+    .christmas-countdown {
+        color: #fff;
+        background: rgba(0, 0, 0, .86);
+    }
+
+    .christmas-countdown h2,
+    .doomsday-screen h2 {
+        margin: 0 0 8px;
+        font-size: clamp(16px, 3vw, 22px);
+        letter-spacing: 1px;
+    }
+
+    .christmas-countdown h2 {
+        color: var(--orange);
+    }
+
+    .countdown-subtitle {
+        margin: 0 0 8px;
+        color: #b8ffd0;
+        font-size: 11px;
+    }
+
+    .countdown-timer,
+    .india-timer,
+    .doom-timer {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    /* Small, black timer panel with transparent number units */
+    .timer-unit {
+        min-width: 54px;
+        padding: 6px 5px;
+        background: transparent;
+        border: 0;
+        border-radius: 6px;
+        box-shadow: none;
+    }
+
+    .timer-unit strong {
+        display: block;
+        color: var(--green);
+        font-size: clamp(18px, 4vw, 24px);
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 0 10px rgba(0, 255, 0, .55);
+    }
+
+    .timer-unit span {
+        display: block;
+        margin-top: 3px;
+        color: #baffba;
+        font-size: 8px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .christmas-message {
+        margin: 8px 0 0;
+        color: #d7ffe3;
+        font-size: 13px;
+    }
+
+    /* Green cinematic Doomsday screen */
+    .doomsday-screen {
+        min-height: 280px;
+        display: grid;
+        align-content: center;
+        gap: 16px;
+        isolation: isolate;
+        color: #e5ffec;
+        background:
+            radial-gradient(ellipse at 50% 50%, rgba(0, 255, 90, .23), transparent 34%),
+            radial-gradient(ellipse at center, #06351d 0%, #02140b 52%, #000 100%);
+        box-shadow: 0 0 30px rgba(0, 255, 90, .2);
+        animation: doom-glow 4s ease-in-out infinite;
+    }
+
+    .doomsday-screen::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        pointer-events: none;
+        background: radial-gradient(ellipse, transparent 20%, rgba(0, 0, 0, .72) 78%);
+        box-shadow: inset 0 0 55px rgba(0, 255, 90, .16);
+    }
+
+    .doomsday-kicker,
+    .doom-timer-label {
+        margin: 0;
+        color: #a4ffbd;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .doomsday-screen h2 {
+        color: #6aff9c;
+        font-size: clamp(24px, 6vw, 42px);
+        text-shadow: 0 0 12px rgba(0, 255, 100, .8);
+    }
+
+    @keyframes doom-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 90, .15); }
+        50%      { box-shadow: 0 0 38px rgba(0, 255, 90, .32); }
+    }
+
+    /* These cards stay transparent until 18 December */
+    body.holiday-card-style #singlesContainer .music-card,
+    body.holiday-card-style #epsContainer .music-card,
+    body.holiday-card-style #albumsContainer .music-card,
+    body.holiday-card-style .artist-card,
+    body.holiday-card-style .track-card,
+    body.holiday-card-style .album-info,
+    body.holiday-card-style .artist-profile-section .artist-info {
+        color: #fff;
+        background: transparent !important;
+        background-image: none !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    body.holiday-card-style .music-container,
+    body.holiday-card-style .music-section,
+    body.holiday-card-style .album-section,
+    body.holiday-card-style .artist-profile-section {
+        background: transparent !important;
+    }
+
+    /* Desktop: compact cards with image left and text right */
+    @media (min-width: 701px) {
+        body.holiday-card-style .music-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        body.holiday-card-style .artist-grid {
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        body.holiday-card-style #singlesContainer .music-card,
+        body.holiday-card-style #epsContainer .music-card,
+        body.holiday-card-style #albumsContainer .music-card,
+        body.holiday-card-style .artist-card {
+            min-height: 58px;
+            padding: 6px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+
+        body.holiday-card-style #singlesContainer .music-card > img,
+        body.holiday-card-style #epsContainer .music-card > img,
+        body.holiday-card-style #albumsContainer .music-card > img,
+        body.holiday-card-style .artist-card img,
+        body.holiday-card-style .artist-card .artist-image {
+            width: 44px;
+            height: 44px;
+            margin: 0;
+            flex: 0 0 44px;
+            object-fit: cover;
+        }
+
+        body.holiday-card-style #singlesContainer .music-card h3,
+        body.holiday-card-style #epsContainer .music-card h3,
+        body.holiday-card-style #albumsContainer .music-card h3 {
+            margin: 0 0 4px;
+            font-size: 12px;
+        }
+
+        body.holiday-card-style .artist-card .music-card-info {
+            width: auto;
+            min-width: 0;
+        }
+
+        body.holiday-card-style .artist-card h3 {
+            justify-content: flex-start;
+            font-size: 11px;
+        }
+
+        body.holiday-card-style .artist-card p {
+            margin-top: 3px;
+            font-size: 9px;
+        }
+    }
+
+    /* Mobile: cards transparent; existing mobile sizes and layout stay intact */
+    @media (max-width: 700px) {
+        body.holiday-card-style #singlesContainer .music-card,
+        body.holiday-card-style #epsContainer .music-card,
+        body.holiday-card-style #albumsContainer .music-card,
+        body.holiday-card-style .artist-card {
+            background: transparent !important;
+            background-image: none !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .doomsday-screen {
+            min-height: 250px;
+        }
+    }
+
+    /* Player colors */
+    .bottom-player {
+        color: #111;
+        background: linear-gradient(130deg, #fff, #f4f4f4 58%, #ffecef);
+        border: 2px solid #c51e32;
+    }
+
+    .bottom-player .current-song h3 {
+        color: #111;
+    }
+
+    .bottom-player .current-song p,
+    .bottom-player .progress-container span,
+    .bottom-player .volume-control span {
+        color: #555;
+    }
+
+    .control-buttons button {
+        color: #111;
+    }
+
+    .control-buttons button.active {
+        color: #c51e32;
+    }
+
+    .control-buttons #playPauseBtn {
+        color: #fff;
+        background: #c51e32;
+    }
+
+    .control-buttons :is(
+        #repeatBtn, #shuffleBtn, #repeat, #shuffle,
+        [aria-label*="repeat" i], [aria-label*="shuffle" i],
+        [title*="repeat" i], [title*="shuffle" i],
+        [data-action*="repeat" i], [data-action*="shuffle" i]
+    ) {
+        display: none !important;
+    }
+
+    @media (max-width: 700px) {
+        .bottom-player {
+            color: #fff;
+            background: linear-gradient(115deg, #080808, #351018, #111);
+            border-color: #c51e32;
+        }
+
+        .bottom-player .current-song h3,
+        .bottom-player .control-buttons button {
+            color: #fff;
+        }
+
+        .bottom-player .current-song p {
+            color: rgba(255, 255, 255, .78);
+        }
+
+        .bottom-player .control-buttons button.active {
+            color: #ff5265;
+        }
+
+        .bottom-player .control-buttons #playPauseBtn {
+            color: #111;
+            background: #fff;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #snow-overlay,
+        .doomsday-screen {
+            animation: none;
+        }
+    }
+
+    /* Cards ko opaque dark rakho */
+.music-card,
+.artist-card,
+.track-card,
+.album-info,
+.artist-profile-section .artist-info {
+    background: #101210 !important;
+    background-image: none !important;
+    border: 1px solid #343a35 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .45) !important;
+}
+
+.christmas-countdown,
+.doomsday-screen {
+    margin-top: 28px !important;
+}
+
+.india-timer,
+.doom-timer {
+    width: fit-content;
+    max-width: 100%;
+    margin: 12px auto 0;
+    padding: 8px;
+    background: rgba(0, 0, 0, .88);
+    border: 1px solid #00ff00;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 255, 0, .18);
+}
+@media (max-width: 700px) {
+    .christmas-countdown,
+    .doomsday-screen {
+        margin-top: 18px !important;
+        padding: 9px !important;
+    }
+
+    .india-timer,
+    .doom-timer {
+        gap: 2px !important;
+        margin-top: 7px;
+        padding: 4px;
+        border-radius: 8px;
+    }
+
+    .timer-unit {
+        min-width: 40px !important;
+        padding: 4px 3px !important;
+    }
+
+    .timer-unit strong {
+        font-size: 16px !important;
+    }
+
+    .timer-unit span {
+        margin-top: 2px;
+        font-size: 7px;
+    }
+
+    .christmas-countdown h2,
+    .doomsday-screen h2 {
+        font-size: 15px !important;
+    }
+}
+
+/* Clean sci-fi timer card */
+.india-timer,
+.doom-timer {
+    border: 1px solid #39ff14 !important;
+    border-radius: 4px !important;
+    background: rgba(0, 8, 0, .92) !important;
+    box-shadow: 0 0 12px rgba(57, 255, 20, .22);
+    transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.timer-unit {
+    border-radius: 2px !important;
+    transition: color .25s ease, border-color .25s ease, text-shadow .25s ease;
+}
+
+.timer-unit strong {
+    color: #39ff14 !important;
+    text-shadow: 0 0 10px rgba(57, 255, 20, .8);
+    transition: color .25s ease, text-shadow .25s ease;
+}
+
+.timer-unit span {
+    color: #b8ffad !important;
+    transition: color .25s ease;
+}
+
+/* Hover par timer red */
+.india-timer:hover,
+.doom-timer:hover,
+.india-timer:focus-within,
+.doom-timer:focus-within {
+    border-color: #ff243c !important;
+    background: rgba(30, 0, 3, .95) !important;
+    box-shadow: 0 0 16px rgba(255, 36, 60, .45);
+}
+
+.india-timer:hover .timer-unit strong,
+.doom-timer:hover .timer-unit strong,
+.india-timer:focus-within .timer-unit strong,
+.doom-timer:focus-within .timer-unit strong {
+    color: #ff243c !important;
+    text-shadow: 0 0 10px rgba(255, 36, 60, .8);
+}
+
+.india-timer:hover .timer-unit span,
+.doom-timer:hover .timer-unit span,
+.india-timer:focus-within .timer-unit span,
+.doom-timer:focus-within .timer-unit span {
+    color: #ffb4bd !important;
+}
+
+/* Animated message under the countdown */
+.christmas-message {
+    color: #39ff14 !important;
+    animation: doomsday-message-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes doomsday-message-pulse {
+    0%, 100% {
+        opacity: .4;
+        transform: translateY(4px);
+        text-shadow: 0 0 2px rgba(57, 255, 20, .25);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+        text-shadow: 0 0 12px rgba(57, 255, 20, .8);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .christmas-message {
+        animation: none;
+    }
+}
+
+
+</style>
+
+
 </head>
 
 <body>
+  
+    <!-- Background image and snowfall -->
+    <img id="santa-background" src="images/artists/santa.jpeg" alt="">
+    <div id="santa-fade" aria-hidden="true"></div>
+    <div id="snow-overlay" aria-hidden="true"></div>
 
-    <!-- HEADER -->
+    <!-- Header -->
     <header class="player-header">
-
         <a href="main.html" class="logo">
             <img src="images/logo0.jpeg" alt="RudraVX">
         </a>
- <a href="main.html" class="active">Enter The RudraVX Universe</a>
-        <h1>RudraVX Play</h1>
 
+        <a href="main.html" class="active">Enter The RudraVX Universe</a>
+        <h1>RudraVX Play</h1>
     </header>
 
+    <!-- India countdown, shown before 17 December -->
+    <section id="india-countdown" class="christmas-countdown">
+        <h5>DOOMSDAY IS COMING</h5>
+        <p class="countdown-subtitle"></p>
 
-    <!-- MAIN MUSIC LIBRARY -->
+        <div class="india-timer">
+            <div class="timer-unit">
+                <strong id="india-days">0</strong>
+                <span>Days</span>
+            </div>
+            <div class="timer-unit">
+                <strong id="india-hours">00</strong>
+                <span>Hours</span>
+            </div>
+            <div class="timer-unit">
+                <strong id="india-minutes">00</strong>
+                <span>Minutes</span>
+            </div>
+            <div class="timer-unit">
+                <strong id="india-seconds">00</strong>
+                <span>Seconds</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doomsday phase, shown from 17 to 18 December -->
+    <section id="doomsday-screen" class="doomsday-screen" hidden>
+        <p class="doomsday-kicker">INDIA · PHASE TWO INITIATED</p>
+
+        <div>
+            <p class="doom-timer-label">PHASE ENDS 18 DECEMBER · INDIA TIME</p>
+
+            <div class="doom-timer">
+                <div class="timer-unit">
+                    <strong id="doom-hours">00</strong>
+                    <span>Hours</span>
+                </div>
+                <div class="timer-unit">
+                    <strong id="doom-minutes">00</strong>
+                    <span>Minutes</span>
+                </div>
+                <div class="timer-unit">
+                    <strong id="doom-seconds">00</strong>
+                    <span>Seconds</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="christmas-message">Doomsday Is Coming</p>
+    </section>
+
+    <!-- Main music library -->
     <main class="music-container" id="mainMusicPage">
-
-        <!-- SEARCH -->
         <section class="search-section">
-
             <input
                 type="search"
                 id="songSearch"
                 placeholder="Search songs, albums, artists..."
                 autocomplete="off"
             >
-
         </section>
 
-
-        <!-- SINGLES -->
         <section class="music-section" id="singlesSection">
-
             <h2>Singles</h2>
-
             <div class="music-grid" id="singlesContainer"></div>
-
         </section>
 
-
-        <!-- EPS -->
         <section class="music-section" id="epsSection">
-
             <h2>EPs</h2>
-
             <div class="music-grid" id="epsContainer"></div>
-
         </section>
 
-
-        <!-- ALBUMS -->
         <section class="music-section" id="albumsSection">
-
             <h2>Albums</h2>
-
             <div class="music-grid" id="albumsContainer"></div>
-
         </section>
 
-
-        <!-- ARTISTS -->
         <section class="music-section" id="artistsSection">
-
             <h2>RudraVX Artists</h2>
-
             <div class="artist-grid" id="artistsContainer"></div>
-
         </section>
 
-
-        <!-- SEARCH RESULTS -->
-        <section
-            class="music-section"
-            id="searchResultsSection"
-            hidden
-        >
-
+        <section class="music-section" id="searchResultsSection" hidden>
             <h2>Search Results</h2>
-
             <div class="music-grid" id="searchResults"></div>
-
         </section>
-
     </main>
 
-
-    <!-- ARTIST PROFILE -->
-    <section
-        class="album-section artist-profile-section"
-        id="artistSection"
-        hidden
-    >
-
-        <button id="closeArtist" type="button">
-            ← Back
-        </button>
-
+    <!-- Artist profile -->
+    <section class="album-section artist-profile-section" id="artistSection" hidden>
+        <button id="closeArtist" type="button">Back</button>
         <div id="artistDetails"></div>
-
         <h2>All Songs</h2>
-
         <div id="artistTracks"></div>
-
     </section>
 
-
-    <!-- ALBUM / EP DETAILS -->
-    <section
-        class="album-section"
-        id="albumSection"
-        hidden
-    >
-
-        <button id="closeAlbum" type="button">
-            ← Back
-        </button>
-
+    <!-- Album and EP details -->
+    <section class="album-section" id="albumSection" hidden>
+        <button id="closeAlbum" type="button">Back</button>
         <div id="albumDetails"></div>
-
         <div id="albumTracks"></div>
-
     </section>
 
-
-    <!-- =================================
-         APPLE MUSIC STYLE PLAYER
-    ================================== -->
-
+    <!-- Music player -->
     <footer class="bottom-player" id="bottomPlayer">
-
-        <!-- CURRENT SONG -->
         <div class="current-song">
-
             <img
                 id="currentCover"
                 src="images/logo.jpeg"
-                alt="Song Cover"
+                alt="Song cover"
             >
 
             <div class="song-meta">
-
-                <h3 id="currentTitle">
-                    Select a Song
-                </h3>
-
-                <p id="currentArtist">
-                    Rudravaax
-                </p>
-
+                <h3 id="currentTitle">Select a Song</h3>
+                <p id="currentArtist">Rudravaax</p>
             </div>
-
         </div>
 
+       <div class="control-buttons">
+    <button
+        id="shuffleBtn"
+        type="button"
+        aria-label="Shuffle"
+        title="Shuffle"
+    >⤨</button>
 
-        <!-- PLAYER CONTROLS -->
-        <div class="player-controls">
+    <button
+        id="previousBtn"
+        type="button"
+        aria-label="Previous Song"
+        title="Previous"
+    >◀◀</button>
 
-            <div class="control-buttons">
+    <button
+        id="playPauseBtn"
+        class="main-play-btn"
+        type="button"
+        aria-label="Play"
+        title="Play / Pause"
+    >▶</button>
 
-                <!-- SHUFFLE -->
-                <button
-                    id="shuffleBtn"
-                    type="button"
-                    aria-label="Shuffle"
-                    title="Shuffle"
-                >
-                    ⤨
-                </button>
+    <button
+        id="nextBtn"
+        type="button"
+        aria-label="Next Song"
+        title="Next"
+    >▶▶</button>
 
+    <button
+        id="repeatBtn"
+        type="button"
+        aria-label="Repeat"
+        title="Repeat"
+    >⟳</button>
+</div>
 
-                <!-- PREVIOUS -->
-                <button
-                    id="previousBtn"
-                    type="button"
-                    aria-label="Previous Song"
-                    title="Previous"
-                >
-                    ◀◀
-                </button>
-
-
-                <!-- PLAY / PAUSE -->
-                <button
-                    id="playPauseBtn"
-                    class="main-play-btn"
-                    type="button"
-                    aria-label="Play"
-                    title="Play / Pause"
-                >
-                    ▶
-                </button>
-
-
-                <!-- NEXT -->
-                <button
-                    id="nextBtn"
-                    type="button"
-                    aria-label="Next Song"
-                    title="Next"
-                >
-                    ▶▶
-                </button>
-
-
-                <!-- REPEAT -->
-                <button
-                    id="repeatBtn"
-                    type="button"
-                    aria-label="Repeat"
-                    title="Repeat"
-                >
-                    ⟳
-                </button>
-
-            </div>
-
-
-            <!-- SONG PROGRESS -->
             <div class="progress-container">
-
-                <span id="currentTime">
-                    0:00
-                </span>
+                <span id="currentTime">0:00</span>
 
                 <input
                     type="range"
@@ -264,21 +760,14 @@
                     max="100"
                     value="0"
                     step="0.1"
-                    aria-label="Song Progress"
+                    aria-label="Song progress"
                 >
 
-                <span id="duration">
-                    0:00
-                </span>
-
+                <span id="duration">0:00</span>
             </div>
-
         </div>
 
-
-        <!-- VOLUME CONTROL -->
         <div class="volume-control">
-
             <span aria-hidden="true">◖</span>
 
             <input
@@ -290,27 +779,95 @@
                 value="1"
                 aria-label="Volume"
             >
-
         </div>
-
     </footer>
 
+    <!-- Audio player -->
+    <audio id="audioPlayer" preload="metadata"></audio>
 
-    <!-- AUDIO ELEMENT -->
-    <audio
-        id="audioPlayer"
-        preload="metadata"
-    ></audio>
-
-
-    <!-- JAVASCRIPT FILES -->
+    <!-- Music app scripts -->
     <script src="songs.js"></script>
     <script src="player.js"></script>
     <script src="artists.js"></script>
 
+    <!-- Countdown and phase switching -->
+    <script>
+        const EVENT_YEAR = 2026;
 
-  
-      
+        // 17 December, 00:00 India time
+        const countdownStart = Date.UTC(EVENT_YEAR, 11, 16, 18, 30, 0);
+
+        // 18 December, 00:00 India time
+        const doomsdayEnd = Date.UTC(EVENT_YEAR, 11, 17, 18, 30, 0);
+
+        function setTimerValue(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        }
+
+        function updateDoomsdayCountdown() {
+            const now = Date.now();
+            const countdown = document.getElementById("india-countdown");
+            const doomsday = document.getElementById("doomsday-screen");
+
+            if (!countdown || !doomsday) return;
+
+            // This script does not add card transparency.
+            document.body.classList.remove("holiday-card-style");
+
+            if (now < countdownStart) {
+                countdown.hidden = false;
+                doomsday.hidden = true;
+
+                const left = countdownStart - now;
+
+                setTimerValue("india-days", Math.floor(left / 86400000));
+                setTimerValue(
+                    "india-hours",
+                    String(Math.floor((left % 86400000) / 3600000)).padStart(2, "0")
+                );
+                setTimerValue(
+                    "india-minutes",
+                    String(Math.floor((left % 3600000) / 60000)).padStart(2, "0")
+                );
+                setTimerValue(
+                    "india-seconds",
+                    String(Math.floor((left % 60000) / 1000)).padStart(2, "0")
+                );
+
+                return;
+            }
+
+            if (now < doomsdayEnd) {
+                countdown.hidden = true;
+                doomsday.hidden = false;
+
+                const left = doomsdayEnd - now;
+
+                setTimerValue(
+                    "doom-hours",
+                    String(Math.floor(left / 3600000)).padStart(2, "0")
+                );
+                setTimerValue(
+                    "doom-minutes",
+                    String(Math.floor((left % 3600000) / 60000)).padStart(2, "0")
+                );
+                setTimerValue(
+                    "doom-seconds",
+                    String(Math.floor((left % 60000) / 1000)).padStart(2, "0")
+                );
+
+                return;
+            }
+
+            countdown.hidden = true;
+            doomsday.hidden = true;
+        }
+
+        updateDoomsdayCountdown();
+        setInterval(updateDoomsdayCountdown, 1000);
+    </script>
 </body>
-
 </html>
