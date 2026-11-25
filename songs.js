@@ -213,8 +213,8 @@ const artistProfiles = {
 
     "Vansh Giri Mehar": {
         name: "Vansh Giri Mehar",
-        image: "images/artists/.jpeg",
-        bio: "Singer, Rapper"
+        image: "images/artists/vansh.jpeg",
+        bio: "Assistant Arranger"
     }
 
 };
