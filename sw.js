@@ -1,9 +1,9 @@
 
-const CACHE_NAME = "rudravaax-v1.0.32";
+const CACHE_NAME = "rudravaax-v2.0.32";
 
 const PRECACHE_FILES = [
     "./",
-    "./index.html",
+    "./login.html",
     "./style.css",
     "./images/logo0.jpeg",
     "./images/logo1.png"
@@ -83,7 +83,7 @@ self.addEventListener("fetch", event => {
                 .catch(async () => {
 
                     return await caches.match(request) ||
-                           await caches.match("./index.html");
+                           await caches.match("./login.html");
                 })
         );
 
