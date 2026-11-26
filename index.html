@@ -478,7 +478,7 @@ Celebration</h1>
         }
 
         showMessage("Sign-in successful. Opening the home page…", "success");
-        window.location.assign("./index.html");
+        window.location.assign("./dashboard.html");
       } catch (error) {
         showMessage(
           `Could not sign in: ${error.message || "A network or setup error occurred."}`,
@@ -526,7 +526,7 @@ Celebration</h1>
 
         if (data.session) {
           showMessage("Your account has been created. Opening the home page…", "success");
-          window.location.assign("./index.html");
+          window.location.assign("./dashboard.html");
         } else {
           showMessage(
             "Your account has been created. Check your email and click the confirmation link before signing in.",
