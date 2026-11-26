@@ -323,15 +323,14 @@
       </div>
 
       <div class="visual-copy">
-        <span class="eyebrow"><span class="dot"></span>Create Your Account At RudraVX</span>
-        <h1>Your Dreams --
-          Your Universe</h1>
-        <p>“Where words fail, music speaks.” — Rudravaax </p>
+        <span class="eyebrow"><span class="dot"></span>Create your account at RudraVX</span>
+        <h1>Your Dreams — Your Universe</h1>
+        <p>“Where words fail, music speaks.” — Rudravaax</p>
       </div>
 
       <div class="quote">
         “A little more focus in practice creates a lot more harmony in performance.”
-        <strong>—Your House. Your Studio</strong>
+        <strong>— Your House. Your Studio.</strong>
       </div>
     </section>
 
@@ -348,46 +347,99 @@
         <form id="signup-form">
           <div class="field">
             <label for="username">Username</label>
-            <input id="username" name="username" type="text" placeholder="Choose a username" autocomplete="username" required minlength="3" />
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Choose a username"
+              autocomplete="username"
+              required
+              minlength="3"
+            />
           </div>
 
           <div class="name-row">
             <div class="field">
               <label for="first-name">First name</label>
-              <input id="first-name" name="first_name" type="text" placeholder="First name" autocomplete="given-name" required />
+              <input
+                id="first-name"
+                name="first_name"
+                type="text"
+                placeholder="First name"
+                autocomplete="given-name"
+                required
+              />
             </div>
 
             <div class="field">
               <label for="last-name">Last name</label>
-              <input id="last-name" name="last_name" type="text" placeholder="Last name" autocomplete="family-name" required />
+              <input
+                id="last-name"
+                name="last_name"
+                type="text"
+                placeholder="Last name"
+                autocomplete="family-name"
+                required
+              />
             </div>
           </div>
 
           <div class="field">
             <label for="email">Email address</label>
-            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            />
           </div>
 
           <div class="field">
             <label for="dob">Date of birth</label>
-            <input id="dob" name="dob" type="date" autocomplete="bday" required />
+            <input
+              id="dob"
+              name="dob"
+              type="date"
+              autocomplete="bday"
+              required
+            />
           </div>
 
           <div class="field">
             <label for="password">Create password</label>
-            <input id="password" name="password" type="password" placeholder="At least 6 characters" autocomplete="new-password" required minlength="6" />
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="At least 6 characters"
+              autocomplete="new-password"
+              required
+              minlength="6"
+            />
           </div>
 
           <div class="field">
             <label for="confirm-password">Confirm password</label>
-            <input id="confirm-password" name="confirm_password" type="password" placeholder="Enter password again" autocomplete="new-password" required minlength="6" />
+            <input
+              id="confirm-password"
+              name="confirm_password"
+              type="password"
+              placeholder="Enter your password again"
+              autocomplete="new-password"
+              required
+              minlength="6"
+            />
           </div>
 
           <button class="submit" id="submit" type="submit">Create account</button>
           <div class="message" id="message" role="status" aria-live="polite"></div>
         </form>
 
-        <p class="login-link">Already have an account? <a href="login.html">Sign in</a></p>
+        <p class="login-link">
+          Already have an account? <a href="login.html">Sign in</a>
+        </p>
       </div>
     </section>
   </main>
@@ -399,6 +451,7 @@
     const form = document.getElementById("signup-form");
     const submitButton = document.getElementById("submit");
     const message = document.getElementById("message");
+
     const usernameInput = document.getElementById("username");
     const firstNameInput = document.getElementById("first-name");
     const lastNameInput = document.getElementById("last-name");
@@ -407,7 +460,15 @@
     const passwordInput = document.getElementById("password");
     const confirmPasswordInput = document.getElementById("confirm-password");
 
-    dobInput.max = new Date().toISOString().split("T")[0];
+    // Use the browser's local date so the date field does not shift because of UTC.
+    const today = new Date();
+    const localToday = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, "0"),
+      String(today.getDate()).padStart(2, "0")
+    ].join("-");
+
+    dobInput.max = localToday;
 
     function showMessage(text, type) {
       message.textContent = text;
@@ -415,20 +476,96 @@
     }
 
     function getSupabaseClient() {
-      if (!window.supabase?.createClient) {
-        throw new Error("Signup service load nahi hui. Internet check karke page reload karein.");
+      if (!window.supabase || typeof window.supabase.createClient !== "function") {
+        throw new Error(
+          "The account service could not load. Check your internet connection and reload the page."
+        );
       }
 
-      return window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+      return window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLIC_KEY
+      );
+    }
+
+    function getSignupErrorMessage(error) {
+      const code = error?.code || "";
+      const messageText = error?.message || "";
+      const normalizedMessage = messageText.toLowerCase();
+
+      if (
+        code === "signup_disabled" ||
+        code === "email_provider_disabled" ||
+        normalizedMessage.includes("signups not allowed")
+      ) {
+        return "New account creation is disabled for this website right now. Please contact the website administrator.";
+      }
+
+      if (
+        code === "email_exists" ||
+        code === "user_already_exists" ||
+        normalizedMessage.includes("already registered")
+      ) {
+        return "An account with this email address already exists. Please sign in instead.";
+      }
+
+      if (
+        code === "weak_password" ||
+        normalizedMessage.includes("password should be")
+      ) {
+        return "This password is too weak. Please choose a stronger password and try again.";
+      }
+
+      if (
+        code === "over_email_send_rate_limit" ||
+        normalizedMessage.includes("rate limit")
+      ) {
+        return "Too many attempts were made. Please wait a few minutes and try again.";
+      }
+
+      if (
+        normalizedMessage.includes("invalid email") ||
+        normalizedMessage.includes("unable to validate email")
+      ) {
+        return "Please enter a valid email address.";
+      }
+
+      return `Could not create your account: ${messageText || "An unexpected error occurred. Please try again."}`;
     }
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       message.className = "message";
 
-      if (passwordInput.value !== confirmPasswordInput.value) {
-        showMessage("Dono passwords match nahi karte.", "error");
+      const username = usernameInput.value.trim();
+      const firstName = firstNameInput.value.trim();
+      const lastName = lastNameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      const dateOfBirth = dobInput.value;
+
+      if (username.length < 3) {
+        showMessage("Your username must be at least 3 characters long.", "error");
+        usernameInput.focus();
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage("Your password must be at least 6 characters long.", "error");
+        passwordInput.focus();
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("The passwords do not match. Please check and try again.", "error");
         confirmPasswordInput.focus();
+        return;
+      }
+
+      if (!dateOfBirth || dateOfBirth > localToday) {
+        showMessage("Please enter a valid date of birth.", "error");
+        dobInput.focus();
         return;
       }
 
@@ -437,33 +574,43 @@
 
       try {
         const supabase = getSupabaseClient();
+
         const { data, error } = await supabase.auth.signUp({
-          email: emailInput.value.trim(),
-          password: passwordInput.value,
+          email,
+          password,
           options: {
             data: {
-              username: usernameInput.value.trim(),
-              first_name: firstNameInput.value.trim(),
-              last_name: lastNameInput.value.trim(),
-              date_of_birth: dobInput.value
+              username,
+              first_name: firstName,
+              last_name: lastName,
+              date_of_birth: dateOfBirth
             }
           }
         });
 
         if (error) {
-          showMessage(`Account nahi bana: ${error.message}`, "error");
+          showMessage(getSignupErrorMessage(error), "error");
           return;
         }
 
         if (data.session) {
-          showMessage("Account ban gaya. Sign-in page khol rahe hain…", "success");
-          window.location.assign("./login.html");
+          showMessage(
+            "Your account has been created. Redirecting you to the sign-in page…",
+            "success"
+          );
+
+          window.setTimeout(() => {
+            window.location.assign("./login.html");
+          }, 1200);
         } else {
-          showMessage("Account ban gaya. Email check karke confirmation link par click karein.", "success");
+          showMessage(
+            "Your account has been created. Check your email and click the confirmation link before signing in.",
+            "success"
+          );
         }
       } catch (error) {
         showMessage(
-          `Signup nahi ho paya: ${error.message || "Network ya setup error."}`,
+          `Could not create your account: ${error.message || "A network or setup error occurred. Please try again."}`,
           "error"
         );
       } finally {
