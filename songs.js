@@ -10,7 +10,7 @@ const musicLibrary = [
 
         id: 1,
         title: "Apsara",
-        artist: "Rudravaax, Vansh Giri Mehar",
+        artist: "Rudravaax",
         type: "Single",
         cover: "images/apsara.jpeg",
         audio: "music/Apsara_2.mp3",
