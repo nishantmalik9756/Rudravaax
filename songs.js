@@ -18,7 +18,7 @@ const musicLibrary = [
     },
 
     {
-    id: 2,
+    id: 1,
         title: "Nafrat",
         artist: "Rudravaax",
         type: "Single",
@@ -32,7 +32,7 @@ const musicLibrary = [
     // ==================================
 
     {
-        id: 3,
+        id: 2,
         title: "Uske Liye",
         artist: "Archak, Rudravaax",
         type: "EP",
@@ -78,7 +78,7 @@ const musicLibrary = [
     },
 
     {
-        id: 4,
+        id: 2,
         title: "For Once [COMING SOON]",
         artist: "Rudravaax, NA-SAMAJH",
         type: "EP",
@@ -104,7 +104,7 @@ const musicLibrary = [
     // ==================================
 
     {
-        id: 5,
+        id: 3,
         title: "Signature Chapter One",
         artist: "Rudravaax",
         type: "Album",
